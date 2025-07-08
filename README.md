@@ -1,2 +1,3 @@
-# WEB5_7_gaboja9_FE
-WEB5_7_gaboja9_BE
+# Mock Stock
+
+프로그래머스 백엔드 데브코스 5기 7회차 4팀 최종 프로젝트 FE

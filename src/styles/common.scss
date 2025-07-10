@@ -1,0 +1,46 @@
+// ==========================================================================
+// Pagination Styles
+// ==========================================================================
+.pagination-container {
+  @include flex-center;
+  padding: 1rem 0;
+}
+
+.pagination {
+  display: flex;
+  list-style-type: none;
+  gap: 0.5rem;
+}
+
+.page-item {
+  .page-link {
+    background: $color-card-background;
+    border: 1px solid $color-border;
+    color: $color-text-secondary;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    min-width: 36px;
+    height: 36px;
+    @include flex-center;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: $color-border;
+      color: $color-text-primary;
+    }
+  }
+
+  &.active .page-link {
+    background-color: $color-primary-blue;
+    border-color: $color-primary-blue;
+    color: $color-background-dark;
+    font-weight: 700;
+  }
+
+  &.disabled .page-link {
+    color: $color-text-placeholder;
+    pointer-events: none;
+    background-color: $color-background-light;
+  }
+}

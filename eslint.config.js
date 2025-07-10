@@ -37,6 +37,7 @@ export default [
 
       'react/react-in-jsx-scope': 'off',
       'react-refresh/only-export-components': 'warn',
+      'react/prop-types': 'off',
 
       'no-var': 'error',
       'no-unused-vars': ['warn', { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],

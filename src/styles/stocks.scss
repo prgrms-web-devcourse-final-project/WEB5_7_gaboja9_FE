@@ -1,0 +1,100 @@
+.stocks-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+  }
+
+  .search-box {
+    display: flex;
+    gap: 0.5rem;
+
+    input {
+      background-color: $color-background-light;
+      border: 1px solid $color-border;
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      color: $color-text-primary;
+      font-size: 1rem;
+      width: 300px;
+      &::placeholder {
+        color: $color-text-placeholder;
+      }
+      &:focus {
+        outline: none;
+        border-color: $color-primary-blue;
+      }
+    }
+
+    button {
+      background-color: $color-primary-blue;
+      border: none;
+      border-radius: 4px;
+      color: $color-background-dark;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+
+  // ===================== StockTable Styles =====================
+  .stock-table-container {
+    background-color: $color-card-background;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .stock-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid $color-border;
+    }
+
+    thead th {
+      background-color: $color-background-light;
+      color: $color-text-secondary;
+      font-weight: 500;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+    }
+
+    tbody tr {
+      transition: background-color 0.2s ease;
+      &:last-child td {
+        border-bottom: none;
+      }
+      &:hover {
+        background-color: $color-background-light;
+      }
+      td {
+        vertical-align: middle;
+        &.positive {
+          color: $color-positive;
+        }
+        &.negative {
+          color: $color-negative;
+        }
+      }
+    }
+  }
+}

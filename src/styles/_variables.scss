@@ -1,0 +1,28 @@
+// Colors
+$color-background-dark: #101625;
+$color-background-light: #1a2234;
+$color-card-background: #1f2940;
+$color-primary-blue: #23c9d3;
+$color-text-primary: #ffffff;
+$color-text-secondary: #a0aec0;
+$color-text-placeholder: #718096;
+$color-border: #2d3748;
+
+$color-positive: #48bb78;
+$color-negative: #f56565;
+
+// Font
+$font-family-main: 'Noto Sans KR', sans-serif;
+
+@mixin flex-center($justify: center, $align: center) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin card-style {
+  background-color: $color-card-background;
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid $color-border;
+}

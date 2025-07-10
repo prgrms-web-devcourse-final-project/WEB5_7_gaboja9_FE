@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+@import 'variables';
+@import 'reset';
+@import 'common';
+@import 'dashboard';
+@import 'layout';
+@import 'stocks';
+
+body {
+  background-color: $color-background-dark;
+  color: $color-text-primary;
+  font-family: $font-family-main;
+}
+
+.main-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}

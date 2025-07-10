@@ -1,0 +1,150 @@
+.dashboard-page {
+  display: grid;
+  gap: 2rem;
+  width: 100%;
+
+  // ===================== AssetSummaryCard Styles =====================
+  .asset-summary-card {
+    @include card-style;
+
+    .card-title {
+      font-size: 1rem;
+      color: $color-text-secondary;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: $color-text-primary;
+
+      &.positive {
+        color: $color-positive;
+      }
+      &.negative {
+        color: $color-negative;
+      }
+    }
+  }
+
+  // ===================== DashboardStockList Styles =====================
+  .dashboard-stock-list {
+    @include card-style;
+
+    .list-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .stock-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid $color-border;
+      &:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      &:first-child {
+        padding-top: 0;
+      }
+    }
+
+    .stock-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      .stock-name {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+      .stock-quantity {
+        font-size: 0.875rem;
+        color: $color-text-secondary;
+      }
+    }
+
+    .stock-price-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.25rem;
+      .current-price {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+      .change-rate {
+        font-size: 0.875rem;
+        &.positive {
+          color: $color-positive;
+        }
+        &.negative {
+          color: $color-negative;
+        }
+      }
+    }
+  }
+
+  // ===================== RecentTransactions Styles =====================
+  .recent-transactions {
+    @include card-style;
+
+    .list-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+    }
+
+    .tx-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .tx-type {
+        font-weight: 700;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+
+        &.buy {
+          background-color: rgba($color-positive, 0.2);
+          color: $color-positive;
+        }
+        &.sell {
+          background-color: rgba($color-negative, 0.2);
+          color: $color-negative;
+        }
+      }
+    }
+
+    .tx-details {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      color: $color-text-secondary;
+      font-size: 0.875rem;
+    }
+  }
+
+  // Layout grids for the page
+  &__summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  &__lists {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+  }
+}

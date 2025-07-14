@@ -22,7 +22,7 @@ const RecentTransactions = () => {
             </div>
             <div className="tx-details">
               <span className="tx-date">{tx.date}</span>
-              <span className="tx-amount">₩{tx.amount.toLocaleString()}</span>
+              <span className="tx-amount">₩ {tx.amount.toLocaleString()}</span>
             </div>
           </li>
         ))}

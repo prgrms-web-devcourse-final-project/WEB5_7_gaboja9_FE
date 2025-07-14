@@ -32,7 +32,7 @@ const StocksPage = () => {
         <div className="search-box">
           <input
             type="text"
-            placeholder="종목명 또는 코드를 입력하세요"
+            placeholder="종목명을 입력하세요"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);

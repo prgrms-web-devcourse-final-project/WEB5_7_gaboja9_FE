@@ -44,3 +44,64 @@
     background-color: $color-background-light;
   }
 }
+
+.custom-select {
+  position: relative;
+  width: 120px;
+  font-size: 0.875rem;
+
+  .select-trigger {
+    background-color: $color-background-light;
+    border: 1px solid $color-border;
+    color: $color-text-primary;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: $color-primary-blue;
+    }
+  }
+
+  .arrow {
+    border: solid $color-text-secondary;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    transition: transform 0.2s;
+    &.open {
+      transform: rotate(-135deg);
+    }
+  }
+
+  .options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: $color-card-background;
+    border: 1px solid $color-border;
+    border-radius: 4px;
+    margin-top: 4px;
+    z-index: 10;
+    overflow: hidden;
+
+    .option {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      &:hover {
+        background-color: $color-background-light;
+      }
+      &.selected {
+        background-color: $color-primary-blue;
+        color: $color-background-dark;
+        font-weight: 700;
+      }
+    }
+  }
+}

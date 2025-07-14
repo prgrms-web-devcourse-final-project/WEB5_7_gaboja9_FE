@@ -2,7 +2,7 @@ import classNames from 'classnames';
 
 const AssetSummaryCard = ({ title, value, isPercentage = false }) => {
   const isNegative = typeof value === 'number' && value < 0;
-  const formattedValue = isPercentage ? `${value}%` : `₩${value.toLocaleString()}`;
+  const formattedValue = isPercentage ? `${value}%` : `₩ ${value.toLocaleString()}`;
 
   return (
     <div className="asset-summary-card">

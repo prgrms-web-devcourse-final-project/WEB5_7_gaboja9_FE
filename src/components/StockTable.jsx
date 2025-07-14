@@ -1,6 +1,14 @@
 import classNames from 'classnames';
+import { useNavigate } from 'react-router-dom';
 
 const StockTable = ({ stocks }) => {
+  const navigate = useNavigate();
+
+  // 스톡 상세 페이지로 이동하는 함수
+  const handleClickStock = (stockId) => {
+    navigate(`/stock/${stockId}`);
+  };
+
   return (
     <div className="stock-table-container">
       <table className="stock-table">
@@ -15,7 +23,7 @@ const StockTable = ({ stocks }) => {
         </thead>
         <tbody>
           {stocks.map((stock) => (
-            <tr key={stock.id}>
+            <tr key={stock.id} onClick={() => handleClickStock(stock.id)}>
               <td>{stock.name}</td>
               <td
                 className={classNames({
@@ -23,7 +31,7 @@ const StockTable = ({ stocks }) => {
                   negative: stock.changeRate < 0,
                 })}
               >
-                ₩{stock.currentPrice.toLocaleString()}
+                ₩ {stock.currentPrice.toLocaleString()}
               </td>
               <td
                 className={classNames({

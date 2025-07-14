@@ -48,9 +48,7 @@ const StockDetailPage = () => {
   };
 
   const handleOrderSubmit = (order) => {
-    alert(
-      `${order.quantity}주 ${order.type === 'buy' ? '매수' : '매도'} 주문이 접수되었습니다. (유형: ${order.priceType})`,
-    );
+    alert(`${order.quantity}주 ${order.type === 'buy' ? '매수' : '매도'} 주문이 접수되었습니다.`);
     console.log('Submitted Order:', order);
   };
 

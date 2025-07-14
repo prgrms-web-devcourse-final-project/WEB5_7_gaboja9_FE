@@ -1,9 +1,10 @@
+@import 'variables';
+
 .dashboard-page {
   display: grid;
   gap: 2rem;
   width: 100%;
 
-  // ===================== AssetSummaryCard Styles =====================
   .asset-summary-card {
     @include card-style;
 
@@ -27,7 +28,6 @@
     }
   }
 
-  // ===================== DashboardStockList Styles =====================
   .dashboard-stock-list {
     @include card-style;
 
@@ -37,20 +37,29 @@
       margin-bottom: 1.5rem;
     }
 
+    ul {
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+      padding: 0;
+      margin: 0 -1.5rem;
+    }
+
     .stock-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 0;
-      border-bottom: 1px solid $color-border;
+      padding: 1rem 1.5rem;
       cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+      border-bottom: 1px solid $color-border;
 
       &:last-child {
         border-bottom: none;
-        padding-bottom: 0;
       }
-      &:first-child {
-        padding-top: 0;
+
+      &:hover {
+        background-color: $color-background-light;
       }
     }
 
@@ -89,7 +98,6 @@
     }
   }
 
-  // ===================== RecentTransactions Styles =====================
   .recent-transactions {
     @include card-style;
 
@@ -137,7 +145,6 @@
     }
   }
 
-  // Layout grids for the page
   &__summary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

@@ -1,0 +1,654 @@
+@import 'variables';
+
+.mypage-container {
+  display: block;
+}
+
+.mypage-header {
+  @include card-style;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2.5rem;
+  margin-bottom: 2rem;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    .user-avatar-large {
+      width: 64px;
+      height: 64px;
+      border-radius: $border-radius-circle;
+      background-color: $color-primary-blue;
+    }
+
+    .user-nickname-large {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
+      .stat-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+
+        &.positive {
+          color: $color-positive;
+        }
+        &.negative {
+          color: $color-negative;
+        }
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: $color-text-secondary;
+      }
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 40px;
+      background-color: $color-border;
+    }
+  }
+}
+
+.mypage-body {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.mypage-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  @include card-style;
+  padding: 1rem 0;
+}
+
+.mypage-tabs {
+  display: flex;
+  flex-direction: column;
+
+  .tab-item {
+    background: none;
+    border: none;
+    padding: 1rem 1.5rem;
+    color: $color-text-secondary;
+    font-weight: 500;
+    font-size: 1rem;
+    font-family: $font-family-main;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+      background-color: $color-background-light;
+      color: $color-text-primary;
+    }
+
+    &.active {
+      background-color: rgba($color-primary-blue, 0.1);
+      color: $color-primary-blue;
+      border-right: 3px solid $color-primary-blue;
+      font-weight: 700;
+    }
+
+    // ✅ 숫자 배지 스타일 추가
+    .notification-badge {
+      background-color: $color-negative;
+      color: $color-white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 10px;
+      @include flex-center;
+    }
+  }
+}
+
+.mypage-content {
+  flex-grow: 1;
+}
+
+// Portfolio Section
+.portfolio-section {
+}
+
+.portfolio-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  .summary-card {
+    @include card-style;
+    padding: 1.5rem;
+    .card-title {
+      font-size: 0.9rem;
+      color: $color-text-secondary;
+      margin-bottom: 0.5rem;
+    }
+    .card-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      &.large {
+        font-size: 1.75rem;
+      }
+      &.positive {
+        color: $color-positive;
+      }
+      &.negative {
+        color: $color-negative;
+      }
+    }
+  }
+}
+
+.portfolio-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: flex-start;
+
+  .details-card {
+    @include card-style;
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+
+.owned-stocks-list {
+  display: flex;
+  flex-direction: column;
+
+  .owned-stock-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid $color-border;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .stock-item-left {
+      .stock-name {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+      .stock-meta {
+        font-size: 0.875rem;
+        color: $color-text-secondary;
+      }
+    }
+
+    .stock-item-right {
+      text-align: right;
+      .stock-value {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+      .stock-return {
+        font-size: 0.875rem;
+        &.positive {
+          color: $color-positive;
+        }
+        &.negative {
+          color: $color-negative;
+        }
+      }
+    }
+  }
+}
+
+// TransactionHistory Section
+.transaction-history-section {
+  @include card-style;
+
+  .filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid $color-border;
+    margin-bottom: 1rem;
+
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      background-color: $color-background-light;
+      padding: 0.5rem;
+      border-radius: $border-radius-base;
+
+      button {
+        background: transparent;
+        border: none;
+        color: $color-text-secondary;
+        padding: 0.5rem 1rem;
+        border-radius: $border-radius-sm;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+
+        &.active {
+          background-color: $color-card-background;
+          color: $color-text-primary;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+          font-weight: 700;
+        }
+      }
+    }
+
+    .search-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      input[type='text'] {
+        background-color: $color-background-light;
+        border: 1px solid $color-border;
+        border-radius: 4px;
+        padding: 0.6rem 1rem;
+        color: $color-text-primary;
+        font-size: 0.9rem;
+        width: 180px;
+
+        &::placeholder {
+          color: $color-text-placeholder;
+        }
+      }
+
+      .date-picker-wrapper {
+        display: flex;
+        align-items: center;
+        background-color: $color-background-light;
+        border: 1px solid $color-border;
+        border-radius: 4px;
+        padding: 0 0.5rem;
+
+        .date-picker-input {
+          background: transparent;
+          border: none;
+          color: $color-text-primary;
+          padding: 0.6rem 0.5rem;
+          width: 150px;
+          text-align: center;
+          font-size: 0.9rem;
+          cursor: pointer;
+          &:focus {
+            outline: none;
+          }
+          &::placeholder {
+            color: $color-text-placeholder;
+          }
+        }
+        .date-picker-tilde {
+          color: $color-text-secondary;
+        }
+      }
+
+      .search-btn {
+        background-color: $color-primary-blue;
+        border: none;
+        color: $color-white;
+        padding: 0.6rem 1.5rem;
+        border-radius: 4px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: $color-primary-blue-hover;
+        }
+      }
+    }
+  }
+
+  .transaction-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0.5rem;
+    border-bottom: 1px solid $color-border;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: $color-background-light;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .type-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      @include flex-center;
+      font-weight: 700;
+      color: $color-white;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      padding: 0 0.5rem;
+
+      &.buy {
+        background-color: rgba($color-positive, 0.8);
+      }
+      &.sell {
+        background-color: rgba($color-negative, 0.8);
+      }
+    }
+
+    .info-group {
+      .tx-date {
+        font-size: 0.875rem;
+        color: $color-text-secondary;
+        margin-bottom: 0.5rem;
+      }
+      .stock-info {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        margin-bottom: 0.3rem;
+        .stock-name {
+          margin-top: 0.5rem;
+          font-size: 1.1rem;
+          font-weight: 700;
+        }
+        .stock-id {
+          font-size: 0.875rem;
+          color: $color-text-secondary;
+        }
+      }
+      .tx-details {
+        font-size: 0.875rem;
+        color: $color-text-secondary;
+      }
+    }
+
+    .item-right {
+      text-align: right;
+      .tx-amount {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: $color-text-primary;
+      }
+      .tx-pl {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        &.positive {
+          color: $color-positive;
+        }
+        &.negative {
+          color: $color-negative;
+        }
+      }
+    }
+  }
+}
+
+// Mailbox Section Styles
+.mailbox-section {
+  @include card-style;
+
+  .filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid $color-border;
+    margin-bottom: 1rem;
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      background-color: $color-background-light;
+      padding: 0.5rem;
+      border-radius: $border-radius-base;
+
+      button {
+        background: transparent;
+        border: none;
+        color: $color-text-secondary;
+        padding: 0.5rem 1rem;
+        border-radius: $border-radius-sm;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+
+        &.active {
+          background-color: $color-card-background;
+          color: $color-text-primary;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}
+
+.mail-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.mail-item {
+  border-bottom: 1px solid $color-border;
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .mail-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $color-background-light;
+    }
+
+    .summary-left {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      .icon {
+        font-size: 1.5rem;
+      }
+    }
+
+    .mail-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      .sender {
+        font-size: 0.8rem;
+        color: $color-text-secondary;
+        font-weight: 500;
+      }
+      .title {
+        font-size: 1rem;
+        font-weight: 500;
+        color: $color-text-secondary;
+      }
+    }
+
+    .summary-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: $color-text-secondary;
+      font-size: 0.875rem;
+
+      .unread-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: $color-primary-blue;
+      }
+    }
+  }
+
+  // 안읽은 메일 스타일
+  &.unread {
+    .mail-details .title {
+      color: $color-text-primary;
+      font-weight: 700;
+    }
+  }
+
+  // 아코디언 애니메이션 (max-height 사용)
+  .mail-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+
+    &.expanded {
+      max-height: 200px; // 내용 길이에 따라 조절 가능
+    }
+
+    .content-inner {
+      padding: 0 0.5rem 1.5rem 4rem; // 아이콘과 간격 맞춤
+      color: $color-text-secondary;
+      line-height: 1.6;
+      p {
+        padding-top: 1rem;
+        border-top: 1px solid $color-border;
+      }
+    }
+  }
+}
+
+// react-datepicker custom theme
+.react-datepicker__input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.react-datepicker-wrapper {
+  display: inline-block;
+  width: auto;
+}
+
+.react-datepicker-popper {
+  z-index: 10;
+}
+.react-datepicker {
+  font-family: $font-family-main;
+  background-color: $color-background-light;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-base;
+  color: $color-text-primary;
+  padding: 0.5rem;
+}
+.react-datepicker__header {
+  background-color: $color-background-dark;
+  border-bottom: 1px solid $color-border;
+  padding-top: 1rem;
+}
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: $color-text-primary;
+  font-weight: bold;
+  font-size: 1rem;
+}
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: $color-text-secondary;
+  width: 2rem;
+  line-height: 2rem;
+  margin: 0.2rem;
+}
+.react-datepicker__day:hover {
+  background-color: $color-border;
+  border-radius: 50%;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range {
+  background-color: $color-primary-blue;
+  color: $color-white;
+  border-radius: 50%;
+}
+.react-datepicker__day--keyboard-selected {
+  background-color: lighten($color-primary-blue, 10%);
+  border-radius: 50%;
+}
+.react-datepicker__day--range-start,
+.react-datepicker__day--range-end {
+  background-color: $color-primary-blue;
+  color: $color-white;
+}
+.react-datepicker__navigation {
+  top: 1rem;
+}
+.react-datepicker__navigation-icon::before {
+  border-color: $color-text-primary;
+  border-width: 2px 2px 0 0;
+}
+.react-datepicker__close-icon {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+  cursor: pointer;
+  background-color: transparent;
+
+  &::after {
+    background-color: transparent;
+    color: $color-text-placeholder;
+    font-size: 1.25rem;
+    line-height: 1;
+    content: '\00d7';
+  }
+}
+.react-datepicker__triangle {
+  display: none;
+}

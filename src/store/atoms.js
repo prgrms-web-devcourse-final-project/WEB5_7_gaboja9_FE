@@ -2,6 +2,14 @@ import { atom } from 'jotai';
 
 import { MOCK_USER_ASSETS, MOCK_OWNED_STOCKS, MOCK_WATCHLIST, MOCK_RECENT_TRANSACTIONS } from '../constants/mockData';
 
+export const modalStateAtom = atom({
+  isOpen: false,
+  type: 'alert',
+  message: '',
+  onConfirm: null,
+  onCancel: null,
+});
+
 export const userAssetsAtom = atom(MOCK_USER_ASSETS);
 export const ownedStocksAtom = atom(MOCK_OWNED_STOCKS);
 export const watchListAtom = atom(MOCK_WATCHLIST);

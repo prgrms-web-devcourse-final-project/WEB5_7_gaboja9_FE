@@ -450,9 +450,6 @@ const RankingPage = () => {
   // "더 보기" 버튼 표시 여부
   const hasMoreUsers = visibleUsersCount < currentRankingData.length;
 
-  // 내 순위가 현재 보이는 목록에 있는지 확인
-  const isMyRankAlreadyDisplayed = usersToDisplay.some((user) => user.id === myUserId);
-
   const rankingTabs = [
     { id: 'returnRate', label: '수익률 랭킹' },
     { id: 'asset', label: '자산 랭킹' },

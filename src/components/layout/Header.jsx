@@ -1,6 +1,20 @@
 import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import useModal from '@/hooks/useModal';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { openConfirm } = useModal();
+
+  const handleClickLogout = () => {
+    openConfirm(
+      '정말 로그아웃 하시겠습니까?',
+      () => navigate('/login'),
+      () => console.log('Confirm Cancel'),
+    );
+  };
+
   return (
     <header className="header">
       <div className="header__container">
@@ -23,7 +37,9 @@ const Header = () => {
         </nav>
         <div className="header__user-info">
           <span>홍길동님</span>
-          <button className="logout-button">로그아웃</button>
+          <button className="logout-button" onClick={handleClickLogout}>
+            로그아웃
+          </button>
         </div>
       </div>
     </header>

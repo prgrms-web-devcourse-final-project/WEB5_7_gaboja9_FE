@@ -1,0 +1,226 @@
+@import 'variables';
+
+.auth-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  background: linear-gradient(120deg, #373399, #5b247a); // 기획서의 그라데이션 배경 적용
+  font-family: $font-family-main;
+}
+
+// 왼쪽 정보 패널 스타일
+.auth-info-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: $color-white;
+  text-align: center;
+  padding: 2rem;
+
+  .logo {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .description {
+    font-size: 1.25rem;
+    color: $color-text-secondary;
+    margin-bottom: 3rem;
+  }
+
+  // 글래스모피즘 효과 적용
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    li {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 1rem 2rem;
+      border-radius: $border-radius-lg;
+      font-size: 1rem;
+      font-weight: 500;
+      color: $color-text-primary;
+    }
+  }
+}
+
+// 오른쪽 폼 패널 스타일
+.auth-form-panel {
+  width: 480px;
+  flex-shrink: 0;
+  background-color: $color-background-dark; // 오른쪽은 어두운 배경
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  color: $color-text-primary;
+
+  .form-header {
+    margin-bottom: 2rem;
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      color: $color-text-secondary;
+    }
+  }
+
+  .form-toggle {
+    display: flex;
+    background-color: $color-background-light;
+    border-radius: $border-radius-base;
+    margin-bottom: 2rem;
+    padding: 0.25rem;
+
+    button {
+      flex: 1;
+      padding: 0.75rem;
+      border: none;
+      background: transparent;
+      color: $color-text-secondary;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: $border-radius-sm;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+
+      &.active {
+        background-color: $color-card-background;
+        color: $color-text-primary;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto; // 폼이 길어질 경우 스크롤
+
+  .input-group,
+  .input-group-with-btn {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: $color-text-secondary;
+    }
+    input {
+      background-color: $color-background-light;
+      border: 1px solid $color-border;
+      border-radius: $border-radius-sm;
+      padding: 0.8rem 1rem;
+      color: $color-text-primary;
+      font-size: 1rem;
+      &:focus {
+        outline: none;
+        border-color: $color-primary-blue;
+      }
+      &::placeholder {
+        color: $color-text-placeholder;
+      }
+    }
+  }
+
+  .input-group-with-btn {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 0.5rem;
+    .input-group {
+      flex-grow: 1;
+    }
+  }
+
+  .inline-btn {
+    padding: 0.8rem 1rem;
+    background-color: $color-border;
+    color: $color-text-primary;
+    border: none;
+    border-radius: $border-radius-sm;
+    font-weight: 500;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: lighten($color-border, 5%);
+    }
+  }
+
+  .submit-btn {
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    background-color: $color-primary-blue;
+    color: $color-white;
+    border: none;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: $color-primary-blue-hover;
+    }
+  }
+}
+
+.social-login {
+  margin-top: 2rem;
+
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: $color-text-secondary;
+    margin-bottom: 1.5rem;
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid $color-border;
+    }
+    span {
+      padding: 0 1rem;
+    }
+  }
+
+  .social-btn {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 0.75rem;
+    border-radius: $border-radius-sm;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+    &.kakao {
+      background-color: #fee500;
+      color: #000000;
+    }
+    &.google {
+      background-color: #ffffff;
+      color: #000000;
+      border: 1px solid $color-border;
+    }
+    &.naver {
+      background-color: #03c75a;
+      color: #ffffff;
+    }
+  }
+}

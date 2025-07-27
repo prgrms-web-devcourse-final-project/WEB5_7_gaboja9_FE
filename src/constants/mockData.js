@@ -315,6 +315,75 @@ export const MOCK_RECENT_TRANSACTIONS = [
   { id: 2, type: '매도', name: 'NAVER', quantity: 10, date: '2025-07-10', amount: 1680000 },
 ];
 
+export const MOCK_TRANSACTION_HISTORY = [
+  {
+    id: 1,
+    type: '매수',
+    name: 'SK하이닉스',
+    stockId: '000660',
+    date: '2025-07-26',
+    quantity: 10,
+    price: 231000,
+    amount: 2310000,
+    purchasePrice: 155000,
+  },
+  {
+    id: 2,
+    type: '매도',
+    name: 'NAVER',
+    stockId: '035420',
+    date: '2025-07-25',
+    quantity: 5,
+    price: 165500,
+    amount: 827500,
+    purchasePrice: 155000,
+  },
+  {
+    id: 3,
+    type: '매수',
+    name: '삼성전자',
+    stockId: '005930',
+    date: '2025-07-24',
+    quantity: 20,
+    price: 91500,
+    amount: 1830000,
+    purchasePrice: 155000,
+  },
+  {
+    id: 4,
+    type: '매수',
+    name: '카카오',
+    stockId: '035720',
+    date: '2025-07-23',
+    quantity: 30,
+    price: 43250,
+    amount: 1297500,
+    purchasePrice: 155000,
+  },
+  {
+    id: 5,
+    type: '매도',
+    name: '현대차',
+    stockId: '005380',
+    date: '2025-07-22',
+    quantity: 10,
+    price: 288000,
+    amount: 2880000,
+    purchasePrice: 300000,
+  },
+  {
+    id: 6,
+    type: '매수',
+    name: 'LG에너지솔루션',
+    stockId: '373220',
+    date: '2025-07-21',
+    quantity: 5,
+    price: 345000,
+    amount: 1725000,
+    purchasePrice: 155000,
+  },
+];
+
 export const MOCK_ALL_STOCKS = baseStockData.map((stock) => {
   const changeValue = stock.currentPrice - stock.previousClosePrice;
   const changeRate = (changeValue / stock.previousClosePrice) * 100;
@@ -354,3 +423,56 @@ export const MOCK_STOCK_DETAIL = baseStockData.reduce((acc, stock) => {
   };
   return acc;
 }, {});
+
+export const MOCK_MAIL_DATA = [
+  {
+    id: 1,
+    type: 'system',
+    sender: 'MockStock',
+    title: 'v1.1 업데이트 안내: 포트폴리오 분석 기능 추가',
+    content:
+      '안녕하세요, MockStock입니다. 더 나은 서비스 제공을 위해 v1.1 업데이트가 진행되었습니다. 이제 마이페이지에서 상세 포트폴리오 분석 기능을 이용하실 수 있습니다. 많은 이용 바랍니다. 추가적으로 변경된 사항은 다음과 같습니다: 1. UI 개선, 2. 버그 수정',
+    date: '2025-07-27',
+    isRead: false,
+  },
+  {
+    id: 2,
+    type: 'warning',
+    sender: '시스템',
+    title: '계좌 잔액이 100,000원 미만입니다.',
+    content:
+      '회원님의 계좌 잔액이 부족합니다. 안정적인 투자를 위해 계좌 관리에 유의해주시기 바랍니다. 현재 예수금: 98,000원',
+    date: '2025-07-26',
+    isRead: false,
+  },
+  {
+    id: 3,
+    type: 'trade',
+    sender: '거래 알림',
+    title: '매수 체결: 삼성전자(005930) 20주',
+    content:
+      '요청하신 삼성전자 20주 매수 주문이 평균 91,500원에 정상적으로 체결되었습니다. 총 체결 금액은 1,830,000원입니다. 상세 내용은 거래 내역 페이지에서 확인하세요.',
+    date: '2025-07-24',
+    isRead: true,
+  },
+  {
+    id: 4,
+    type: 'info',
+    sender: '이벤트팀',
+    title: '8월의 추천 종목 리스트가 도착했습니다.',
+    content:
+      'MockStock 리서치팀에서 선정한 8월의 유망 종목 리스트를 보내드립니다. 투자의 참고 자료로 활용해보세요. (주의: 본 정보는 투자 권유가 아니며, 투자에 대한 책임은 본인에게 있습니다.)',
+    date: '2025-07-21',
+    isRead: true,
+  },
+  {
+    id: 5,
+    type: 'system',
+    sender: 'MockStock',
+    title: '정기 점검 안내 (2025-08-01 02:00 ~ 04:00)',
+    content:
+      '보다 안정적인 서비스 제공을 위해 시스템 정기 점검이 예정되어 있습니다. 점검 시간 동안 서비스 이용이 일시적으로 중단될 수 있으니 양해 부탁드립니다.',
+    date: '2025-07-20',
+    isRead: true,
+  },
+];

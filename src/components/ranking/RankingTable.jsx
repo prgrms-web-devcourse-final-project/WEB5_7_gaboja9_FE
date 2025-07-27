@@ -4,7 +4,7 @@ import React from 'react';
 import RankingUserCell from './RankingUserCell';
 
 const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMore, hasMore }) => {
-  const formatValue = (tabId, value, initialValue = 0) => {
+  const formatValue = (tabId, value) => {
     switch (tabId) {
       case 'returnRate':
         // 수익률 랭킹: 위에는 수익률, 아래는 투자액
@@ -44,6 +44,9 @@ const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMor
     }
   };
 
+  // 현재 보이는 랭킹 목록에 내 순위가 포함되어 있는지 확인
+  const isMyRankDisplayed = displayedData.some((user) => user.id === myRankData?.id);
+
   return (
     <div className="ranking-table-container">
       <table className="ranking-table">
@@ -77,8 +80,8 @@ const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMor
             </tr>
           )}
 
-          {/* 내 순위가 현재 보이는 목록에 없고, 더보기 할 데이터가 없을 때만 표시 */}
-          {!hasMore && myRankData && !displayedData.some((user) => user.id === myRankData.id) && (
+          {/* 내 순위가 있고, 현재 보이는 목록에 없을 때만 별도로 표시 */}
+          {myRankData && !isMyRankDisplayed && (
             <tr className="my-rank-row">
               <td>
                 <RankingUserCell user={myRankData} selectedRankingTab={selectedRankingTab} />

@@ -22,6 +22,7 @@ const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMor
         return value;
     }
   };
+  // 거래량 -> 수익금 변경
 
   const getSecondaryValue = (tabId, user) => {
     const profit = user.value - user.initialCapital;

@@ -8,7 +8,6 @@ import CustomSelect from '@/components/common/CustomSelect';
 import OrderBook from '@/components/stockDetail/OrderBook';
 import OrderPanel from '@/components/stockDetail/OrderPanel';
 import StockChart from '@/components/stockDetail/StockChart';
-import useStockSocket from '@/hooks/useStockSocket';
 import { userAssetsAtom, ownedStocksAtom } from '@/store/atoms';
 
 const StockDetailPage = () => {
@@ -40,8 +39,7 @@ const StockDetailPage = () => {
     getDetails();
   }, [stockId]);
 
-  const liveStockInfo = useStockSocket(stockId, stockInfo);
-  const currentDisplayInfo = liveStockInfo || stockInfo;
+  const currentDisplayInfo = stockInfo;
 
   const handlePriceSelect = (price) => {
     setSelectedPrice(price);

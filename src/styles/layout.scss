@@ -58,20 +58,19 @@
     align-items: center;
     gap: 1rem;
     color: $color-text-secondary;
+  }
+  .logout-button {
+    background: none;
+    border: 1px solid $color-text-secondary;
+    color: $color-text-secondary;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 
-    .logout-button {
-      background: none;
-      border: 1px solid $color-text-secondary;
-      color: $color-text-secondary;
-      padding: 0.4rem 0.8rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-
-      &:hover {
-        background-color: $color-border;
-        color: $color-text-primary;
-      }
+    &:hover {
+      background-color: $color-border;
+      color: $color-text-primary;
     }
   }
 }

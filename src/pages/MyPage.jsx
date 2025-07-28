@@ -9,7 +9,7 @@ import { MOCK_MAIL_DATA } from '@/constants/mockData';
 import '@/styles/mypage.scss';
 
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState('notifications');
+  const [activeTab, setActiveTab] = useState('portfolio');
   const unreadCount = MOCK_MAIL_DATA.filter((n) => !n.isRead).length;
 
   const tabs = [
@@ -27,7 +27,6 @@ const MyPage = () => {
         return <TransactionHistory />;
       case 'notifications':
         return <Mailbox />;
-      // TODO: Add cases for other tabs
       default:
         return <Portfolio />;
     }

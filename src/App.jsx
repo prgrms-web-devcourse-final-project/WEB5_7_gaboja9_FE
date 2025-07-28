@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import Modal from '@/components/common/Modal';
 import Layout from '@/components/layout/Layout';
+import { useStockSocket } from '@/hooks/useStockSocket';
 import AuthPage from '@/pages/AuthPage';
 import DashboardPage from '@/pages/DashboardPage';
 import MyPage from '@/pages/MyPage';
@@ -12,16 +12,14 @@ import StockDetailPage from '@/pages/StockDetailPage';
 import StocksPage from '@/pages/StocksPage';
 
 const App = () => {
-  useEffect(() => {
-    const apiUrl = 'http://mockstock.duckdns.org/members/me/info';
+  // const [stockCode, setStockCode] = useState('005930');
 
-    const fetchData = async () => {
-      const response = await axios.get(apiUrl);
-      console.log(response.data);
-    };
+  // // 커스텀 훅 사용
+  // const { stockData, socketError, isConnected } = useStockSocket(stockCode);
 
-    fetchData(); // 함수 호출
-  }, []);
+  // console.log('Stock Data:', stockData);
+  // console.log('Socket Error:', socketError);
+  // console.log('Is Connected:', isConnected);
 
   return (
     <>

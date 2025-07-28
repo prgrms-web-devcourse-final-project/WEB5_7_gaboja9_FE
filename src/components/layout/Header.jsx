@@ -1,18 +1,33 @@
+import { useAtomValue } from 'jotai';
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
+import { useAuth } from '@/hooks/useAuth';
 import useModal from '@/hooks/useModal';
+import { isLoggedInAtom } from '@/store/user';
+import { memberInfoAtom } from '@/store/user';
 
 const Header = () => {
   const navigate = useNavigate();
+  const isLoggedIn = useAtomValue(isLoggedInAtom);
+  const memberInfo = useAtomValue(memberInfoAtom);
+
   const { openConfirm } = useModal();
+  const { logout } = useAuth();
 
   const handleClickLogout = () => {
     openConfirm(
       '정말 로그아웃 하시겠습니까?',
-      () => navigate('/login'),
+      () => {
+        logout();
+        navigate('/');
+      },
       () => console.log('Confirm Cancel'),
     );
+  };
+
+  const handleClickLogin = () => {
+    navigate('/login');
   };
 
   return (
@@ -35,12 +50,18 @@ const Header = () => {
             마이페이지
           </NavLink>
         </nav>
-        <div className="header__user-info">
-          <span>홍길동님</span>
-          <button className="logout-button" onClick={handleClickLogout}>
-            로그아웃
+        {isLoggedIn ? (
+          <div className="header__user-info">
+            <span>{memberInfo.nickname}님</span>
+            <button className="logout-button" onClick={handleClickLogout}>
+              로그아웃
+            </button>
+          </div>
+        ) : (
+          <button className="logout-button" onClick={handleClickLogin}>
+            로그인
           </button>
-        </div>
+        )}
       </div>
     </header>
   );

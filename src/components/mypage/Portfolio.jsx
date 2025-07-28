@@ -1,10 +1,14 @@
 import classNames from 'classnames';
 import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 
 import AssetCompositionChart from '@/components/mypage/AssetCompositionChart';
 import { ownedStocksAtom, totalStockValueAtom, userAssetsAtom } from '@/store/atoms';
+import { memberInfoAtom } from '@/store/user';
 
 const Portfolio = () => {
+  const [memberInfo] = useAtom(memberInfoAtom);
+
   const ownedStocks = useAtomValue(ownedStocksAtom);
   const userAssets = useAtomValue(userAssetsAtom);
   const totalStockValue = useAtomValue(totalStockValueAtom);
@@ -19,27 +23,29 @@ const Portfolio = () => {
 
       <div className="portfolio-summary-grid">
         <div className="summary-card">
-          <div className="card-title">총 평가 금액</div>
-          <div className="card-value large">{totalStockValue.toLocaleString()}원</div>
+          <div className="card-title">현금</div>
+          <div className="card-value large">{memberInfo.totalEvaluationAmount.toLocaleString()}원</div>
         </div>
         <div className="summary-card">
-          <div className="card-title">총 투자 원금</div>
-          <div className="card-value">{totalInvestment.toLocaleString()}원</div>
-        </div>
-        <div className="summary-card">
-          <div className="card-title">총 평가 손익</div>
-          <div
-            className={classNames('card-value', {
-              positive: totalProfitLoss > 0,
-              negative: totalProfitLoss < 0,
-            })}
-          >
-            {totalProfitLoss >= 0 ? '+' : ''}
-            {totalProfitLoss.toLocaleString()}원
+          <div className="card-title">주식 평가액</div>
+          <div className="card-value">
+            {(memberInfo.totalEvaluationAmount - memberInfo.totalProfit).toLocaleString()}원
           </div>
         </div>
         <div className="summary-card">
-          <div className="card-title">총 수익률</div>
+          <div className="card-title">총 손익</div>
+          <div
+            className={classNames('card-value', {
+              positive: memberInfo.totalProfit > 0,
+              negative: memberInfo.totalProfit < 0,
+            })}
+          >
+            {memberInfo.totalProfit >= 0 ? '+' : ''}
+            {memberInfo.totalProfit.toLocaleString()}원
+          </div>
+        </div>
+        <div className="summary-card">
+          <div className="card-title">수익률</div>
           <div
             className={classNames('card-value', {
               positive: totalReturnRate > 0,

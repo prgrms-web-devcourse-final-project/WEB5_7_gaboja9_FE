@@ -103,7 +103,6 @@ const StockDetailPage = () => {
           <OrderBook
             orderBook={orderBook}
             onPriceSelect={handlePriceSelect}
-            openingPrice={openingPrice}
             previousClosePrice={previousClosePrice}
             currentPrice={currentPrice}
           />

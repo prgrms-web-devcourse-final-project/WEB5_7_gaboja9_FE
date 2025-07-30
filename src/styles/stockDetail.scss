@@ -90,7 +90,7 @@
 
   &__header {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
     text-align: center;
     padding: 0.75rem 0;
     font-size: 0.75rem;
@@ -113,6 +113,7 @@
   }
 }
 
+// ✅ 호가창 스타일 수정
 .order-book.single-column {
   .order-book__header {
     grid-template-columns: 1fr;
@@ -139,15 +140,18 @@
     font-weight: 700;
     overflow: hidden;
 
-    &.bid {
-      background-color: rgba($color-negative, 0.1);
+    // ✅ 시작가 (중립) 스타일
+    &.opening {
+      background-color: $color-background-light;
       .price-info {
-        color: $color-negative;
+        color: $color-text-primary;
       }
-      .quantity-bar {
-        background-color: $color-negative;
+      .price-percent {
+        color: $color-text-secondary;
       }
     }
+
+    // ✅ 상승 (빨강) 스타일
     &.ask {
       background-color: rgba($color-positive, 0.1);
       .price-info {
@@ -155,6 +159,16 @@
       }
       .quantity-bar {
         background-color: $color-positive;
+      }
+    }
+    // ✅ 하락 (파랑) 스타일
+    &.bid {
+      background-color: rgba($color-negative, 0.1);
+      .price-info {
+        color: $color-negative;
+      }
+      .quantity-bar {
+        background-color: $color-negative;
       }
     }
   }

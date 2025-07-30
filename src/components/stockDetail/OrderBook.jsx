@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 const OrderBook = ({ orderBook, onPriceSelect, previousClosePrice, currentPrice }) => {
   const scrollRef = useRef(null);
@@ -9,10 +9,7 @@ const OrderBook = ({ orderBook, onPriceSelect, previousClosePrice, currentPrice 
 
   const allPrices = [...new Set([...asks.map((a) => a.price), ...bids.map((b) => b.price)])].sort((a, b) => b - a);
 
-  const askMap = new Map(asks.map((a) => [a.price, a.quantity]));
-  const bidMap = new Map(bids.map((b) => [b.price, b.quantity]));
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (scrollRef.current && itemsRef.current[currentPrice]) {
       const container = scrollRef.current;
       const targetElement = itemsRef.current[currentPrice];
@@ -28,10 +25,9 @@ const OrderBook = ({ orderBook, onPriceSelect, previousClosePrice, currentPrice 
       </div>
       <div className="order-book__content" ref={scrollRef}>
         {allPrices.map((price) => {
-          const askQty = askMap.get(price);
-          const bidQty = bidMap.get(price);
           const percentage = ((price - previousClosePrice) / previousClosePrice) * 100;
           const isCurrentPrice = price === currentPrice;
+          const isBasePrice = price === previousClosePrice;
 
           return (
             <div
@@ -42,10 +38,13 @@ const OrderBook = ({ orderBook, onPriceSelect, previousClosePrice, currentPrice 
             >
               <div
                 className={classNames('price-cell', {
-                  ask: !!askQty,
-                  bid: !!bidQty,
+                  opening: isBasePrice,
+                  ask: !isBasePrice && price > previousClosePrice, // 기준가보다 높으면 ask (상승)
+                  bid: !isBasePrice && price < previousClosePrice, // 기준가보다 낮으면 bid (하락)
                 })}
               >
+                <div className="quantity-bar" />
+
                 <div className="price-info">
                   <span className="price-value">{price.toLocaleString()}</span>
                   <span className="price-percent">

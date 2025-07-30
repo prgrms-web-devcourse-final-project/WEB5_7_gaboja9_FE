@@ -19,7 +19,6 @@
   }
 }
 
-// RankingSummaryCards Styles
 .ranking-summary-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -179,7 +178,7 @@
   .rank-circle {
     width: 36px;
     height: 36px;
-    background-color: rgba($color-text-secondary, 0.2); // 4위부터 약간 투명한 회색
+    background-color: rgba($color-text-secondary, 0.2);
     border-radius: $border-radius-circle;
     @include flex-center;
     color: $color-white;
@@ -187,7 +186,6 @@
     font-size: 1rem;
     flex-shrink: 0;
 
-    // Gold, Silver, Bronze는 그대로 유지
     &.rank-1 {
       background-color: #ffd700;
       color: $color-black;
@@ -205,7 +203,7 @@
   .user-details {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; // 텍스트를 왼쪽으로 정렬
+    align-items: flex-start;
 
     .user-nickname {
       font-weight: 700;

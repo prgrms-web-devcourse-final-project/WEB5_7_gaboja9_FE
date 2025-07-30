@@ -74,7 +74,6 @@ const SignUp = () => {
     const params = { email: email.trim() };
 
     const result = await fetchEmail(params);
-    // 여기에 이메일 인증 코드 발송 로직을 추가합니다.
     if (!result.success) {
       openAlert(result.error?.message || '인증번호 발송에 실패했습니다.');
       return;

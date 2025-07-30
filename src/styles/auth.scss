@@ -4,11 +4,10 @@
   width: 100%;
   min-height: 100vh;
   display: flex;
-  background: linear-gradient(120deg, #373399, #5b247a); // 기획서의 그라데이션 배경 적용
+  background: linear-gradient(120deg, #373399, #5b247a);
   font-family: $font-family-main;
 }
 
-// 왼쪽 정보 패널 스타일
 .auth-info-panel {
   flex: 1;
   display: flex;
@@ -30,7 +29,6 @@
     margin-bottom: 3rem;
   }
 
-  // 글래스모피즘 효과 적용
   .feature-list {
     display: flex;
     flex-direction: column;

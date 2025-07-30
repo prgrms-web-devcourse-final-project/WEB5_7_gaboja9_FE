@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 const StockTable = ({ stocks }) => {
   const navigate = useNavigate();
 
-  // 스톡 상세 페이지로 이동하는 함수
   const handleClickStock = (stockId) => {
     navigate(`/stock/${stockId}`);
   };

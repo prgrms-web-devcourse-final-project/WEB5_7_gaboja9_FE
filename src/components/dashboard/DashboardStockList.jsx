@@ -10,7 +10,6 @@ const DashboardStockList = ({ title, stocks, type }) => {
     return { rate };
   };
 
-  // 스톡 상세 페이지로 이동하는 함수
   const handleClickStock = (stockId) => {
     navigate(`/stock/${stockId}`);
   };

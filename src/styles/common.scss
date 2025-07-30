@@ -133,7 +133,7 @@
     line-height: 1.6;
     margin-bottom: 2rem;
     color: $color-text-primary;
-    white-space: pre-wrap; // 줄바꿈(\n) 적용
+    white-space: pre-wrap;
   }
 
   .modal-actions {
@@ -172,7 +172,6 @@
   }
 }
 
-// Animation Keyframes
 @keyframes fadeIn {
   from {
     opacity: 0;

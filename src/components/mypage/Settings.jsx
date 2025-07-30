@@ -75,7 +75,7 @@ const Settings = () => {
             onChange={(e) => setNewPassword(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="form-group-mypage">
           <label htmlFor="confirm-password">새 비밀번호 확인</label>
           <input
             id="confirm-password"

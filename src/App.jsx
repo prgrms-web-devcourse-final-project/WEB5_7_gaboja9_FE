@@ -14,7 +14,6 @@ import StocksPage from '@/pages/StocksPage';
 const App = () => {
   // const [stockCode, setStockCode] = useState('005930');
 
-  // // 커스텀 훅 사용
   // const { stockData, socketError, isConnected } = useStockSocket(stockCode);
 
   // console.log('Stock Data:', stockData);

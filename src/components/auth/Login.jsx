@@ -15,7 +15,7 @@ const Login = () => {
     const response = await login({ email: id, password });
 
     if (!response.success) {
-      openAlert(`로그인 실패: ${response.error}`);
+      openAlert(`로그인 실패`);
     }
   };
 
@@ -53,7 +53,7 @@ const Login = () => {
           placeholder="비밀번호를 입력하세요"
         />
       </div>
-      <button type="submit" className="submit-btn">
+      <button type="submit" className="submit-btn" disabled={!id || !password}>
         로그인
       </button>
 
@@ -88,6 +88,14 @@ const Login = () => {
         >
           네이버로 시작하기
         </button>
+      </div>
+
+      <div className="auth-footer">
+        <p>
+          <a href="/" className="link">
+            비회원으로 이용하기
+          </a>
+        </p>
       </div>
     </form>
   );

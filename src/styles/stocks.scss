@@ -51,7 +51,6 @@
     }
   }
 
-  // ===================== StockTable Styles =====================
   .stock-table-container {
     background-color: $color-card-background;
     border: 1px solid $color-border;
@@ -62,20 +61,29 @@
   .stock-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 
     th,
     td {
       padding: 1.25rem 1.5rem;
       text-align: left;
       border-bottom: 1px solid $color-border;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     thead th {
+      width: 22.5%;
       background-color: $color-background-light;
       color: $color-text-secondary;
       font-weight: 500;
       font-size: 0.875rem;
       text-transform: uppercase;
+
+      &:last-child {
+        width: 10%;
+      }
     }
 
     tbody tr {

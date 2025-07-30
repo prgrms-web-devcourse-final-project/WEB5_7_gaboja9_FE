@@ -139,7 +139,11 @@ const SignUp = () => {
         />
       </div>
 
-      <button type="submit" className="submit-btn">
+      <button
+        type="submit"
+        className="submit-btn"
+        disabled={!name || !email || !password || !passwordConfirm || !verificationCode}
+      >
         가입하기
       </button>
     </form>

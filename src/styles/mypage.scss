@@ -118,7 +118,6 @@
       font-weight: 700;
     }
 
-    // ✅ 숫자 배지 스타일 추가
     .notification-badge {
       background-color: $color-negative;
       color: $color-white;
@@ -135,10 +134,6 @@
 
 .mypage-content {
   flex-grow: 1;
-}
-
-// Portfolio Section
-.portfolio-section {
 }
 
 .portfolio-summary-grid {
@@ -233,7 +228,6 @@
   }
 }
 
-// TransactionHistory Section
 .transaction-history-section {
   @include card-style;
 
@@ -430,7 +424,6 @@
   }
 }
 
-// Mailbox Section Styles
 .mailbox-section {
   @include card-style;
 
@@ -539,7 +532,6 @@
     }
   }
 
-  // 안읽은 메일 스타일
   &.unread {
     .mail-details .title {
       color: $color-text-primary;
@@ -547,18 +539,17 @@
     }
   }
 
-  // 아코디언 애니메이션 (max-height 사용)
   .mail-content {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-in-out;
 
     &.expanded {
-      max-height: 200px; // 내용 길이에 따라 조절 가능
+      max-height: 200px;
     }
 
     .content-inner {
-      padding: 0 0.5rem 1.5rem 4rem; // 아이콘과 간격 맞춤
+      padding: 0 0.5rem 1.5rem 4rem;
       color: $color-text-secondary;
       line-height: 1.6;
       p {
@@ -569,7 +560,193 @@
   }
 }
 
-// react-datepicker custom theme
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.setting-card {
+  @include card-style;
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid $color-border;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    color: $color-text-secondary;
+    margin-bottom: 0.75rem;
+  }
+
+  input {
+    width: 100%;
+    background-color: $color-background-light;
+    border: 1px solid $color-border;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    color: $color-text-primary;
+    font-size: 1rem;
+    &:focus {
+      outline: none;
+      border-color: $color-primary-blue;
+    }
+  }
+}
+
+.input-with-btn {
+  display: flex;
+  gap: 0.5rem;
+  input {
+    flex-grow: 1;
+  }
+  .inline-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: $color-border;
+    color: $color-text-primary;
+    border: none;
+    border-radius: $border-radius-sm;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: lighten($color-border, 5%);
+    }
+  }
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.submit-btn {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background-color: $color-primary-blue;
+  color: $color-white;
+  border: none;
+  border-radius: $border-radius-sm;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: $color-primary-blue-hover;
+  }
+
+  &:disabled {
+    background-color: $color-border;
+    cursor: not-allowed;
+  }
+
+  &.danger {
+    background-color: $color-negative;
+    &:hover {
+      background-color: lighten($color-negative, 5%);
+    }
+  }
+}
+
+.notification-setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid $color-border;
+
+  &:first-of-type {
+    padding-top: 0;
+  }
+
+  &:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .setting-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: $color-text-primary;
+  }
+
+  .setting-description {
+    font-size: 0.875rem;
+    color: $color-text-secondary;
+    margin-top: 0.25rem;
+  }
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $color-border;
+    transition: 0.4s;
+    &.round {
+      border-radius: 34px;
+    }
+    &::before {
+      position: absolute;
+      content: '';
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+
+      &.round {
+        border-radius: 50%;
+      }
+    }
+  }
+  input:checked + .slider {
+    background-color: $color-primary-blue;
+  }
+  input:checked + .slider:before {
+    transform: translateX(22px);
+  }
+}
+
+.withdrawal-card {
+  border: 1px solid $color-negative;
+  .card-title {
+    color: $color-negative;
+  }
+}
+
+.withdrawal-description {
+  color: $color-text-secondary;
+  line-height: 1.6;
+}
+
 .react-datepicker__input-container {
   display: flex;
   align-items: center;

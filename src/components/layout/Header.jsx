@@ -1,18 +1,16 @@
 import { useAtomValue } from 'jotai';
-import { NavLink } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/hooks/useAuth';
 import useModal from '@/hooks/useModal';
-import { isLoggedInAtom } from '@/store/user';
-import { memberInfoAtom } from '@/store/user';
+import { isLoggedInAtom, memberInfoAtom } from '@/store/user';
 
 const Header = () => {
   const navigate = useNavigate();
   const isLoggedIn = useAtomValue(isLoggedInAtom);
   const memberInfo = useAtomValue(memberInfoAtom);
 
-  const { openConfirm } = useModal();
+  const { openAlert, openConfirm } = useModal();
   const { logout } = useAuth();
 
   const handleClickLogout = () => {
@@ -28,6 +26,13 @@ const Header = () => {
 
   const handleClickLogin = () => {
     navigate('/login');
+  };
+
+  const handleMyPageClick = (e) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      openAlert('로그인이 필요한 서비스입니다.');
+    }
   };
 
   return (
@@ -46,7 +51,11 @@ const Header = () => {
           <NavLink to="/ranking" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
             랭킹
           </NavLink>
-          <NavLink to="/mypage" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          <NavLink
+            to="/mypage"
+            onClick={handleMyPageClick}
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+          >
             마이페이지
           </NavLink>
         </nav>

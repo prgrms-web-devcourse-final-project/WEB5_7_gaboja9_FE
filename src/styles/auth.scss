@@ -171,6 +171,10 @@
     &:hover {
       background-color: $color-primary-blue-hover;
     }
+    &:disabled {
+      background-color: $color-border;
+      cursor: not-allowed;
+    }
   }
 }
 
@@ -221,6 +225,21 @@
     &.naver {
       background-color: #03c75a;
       color: #ffffff;
+    }
+  }
+}
+
+.auth-footer {
+  margin: 2rem 0;
+  text-align: center;
+
+  a {
+    color: $color-text-secondary;
+    text-decoration: underline;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $color-text-primary;
     }
   }
 }

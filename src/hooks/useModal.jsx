@@ -5,14 +5,20 @@ import { modalStateAtom } from '@/store/atoms';
 const useModal = () => {
   const setModalState = useSetAtom(modalStateAtom);
 
+  const closeModal = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+  };
+
   const openAlert = (message, onConfirm) => {
     setModalState({
       isOpen: true,
       type: 'alert',
       message,
       onConfirm: () => {
-        if (onConfirm) onConfirm();
-        setModalState((prev) => ({ ...prev, isOpen: false }));
+        closeModal();
+        if (onConfirm) {
+          setTimeout(onConfirm, 0);
+        }
       },
       onCancel: null,
     });
@@ -24,12 +30,16 @@ const useModal = () => {
       type: 'confirm',
       message,
       onConfirm: () => {
-        if (onConfirm) onConfirm();
-        setModalState((prev) => ({ ...prev, isOpen: false }));
+        closeModal();
+        if (onConfirm) {
+          setTimeout(onConfirm, 0);
+        }
       },
       onCancel: () => {
-        if (onCancel) onCancel();
-        setModalState((prev) => ({ ...prev, isOpen: false }));
+        closeModal();
+        if (onCancel) {
+          setTimeout(onCancel, 0);
+        }
       },
     });
   };

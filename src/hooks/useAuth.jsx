@@ -34,7 +34,7 @@ export const useAuth = () => {
 
       return { success: true };
     } catch (error) {
-      console.error('로그인 실패:', error);
+      console.error('로그인 실패');
       return { success: false, error };
     }
   };
@@ -66,5 +66,3 @@ export const useAuth = () => {
     passwordReset,
   };
 };
-
-

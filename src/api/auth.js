@@ -6,7 +6,12 @@ export const fetchSignUp = async (params) => {
 };
 
 export const fetchRefreshToken = async () => {
-  const response = await axiosInstance.post('/auth/refresh');
+  const token = localStorage.getItem('refreshToken');
+  if (!token) {
+    throw new Error('Refresh token not found');
+  }
+
+  const response = await axiosInstance.post('/auth/refresh', { headers: { Authorization: `Bearer ${token}` } });
   return response.data;
 };
 

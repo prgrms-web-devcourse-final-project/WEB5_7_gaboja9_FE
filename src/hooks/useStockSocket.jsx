@@ -16,9 +16,15 @@ export const useStockSocket = (stockCode) => {
     }
     console.log('Connecting to stock socket for code:', stockCode);
 
-    const socket = new SockJS('http://mockstock.duckdns.org/ws-stock');
+    // const socket = new SockJS('https://mockstocks.duckdns.org/ws-stock');
+
     const client = new Client({
-      webSocketFactory: () => socket,
+      brokerURL: 'wss://mockstocks.duckdns.org/ws-stock/websocket',
+
+      heartbeatIncoming: 0, // 하트비트 설정도 함께 테스트
+      heartbeatOutgoing: 0,
+
+      // webSocketFactory: () => socket,
       debug: (str) => {
         console.log(new Date(), str);
       },

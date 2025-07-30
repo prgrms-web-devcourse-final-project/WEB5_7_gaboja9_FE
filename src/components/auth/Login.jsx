@@ -56,6 +56,39 @@ const Login = () => {
       <button type="submit" className="submit-btn">
         로그인
       </button>
+
+      <div className="social-login">
+        <div className="divider">
+          <span>OR</span>
+        </div>
+        <button
+          type="button"
+          className="social-btn kakao"
+          onClick={() => {
+            window.location.href = 'https://mockstocks.duckdns.org/oauth2/authorization/kakao';
+          }}
+        >
+          카카오로 시작하기
+        </button>
+        <button
+          type="button"
+          className="social-btn google"
+          onClick={() => {
+            window.location.href = 'https://mockstocks.duckdns.org/oauth2/authorization/google';
+          }}
+        >
+          Google로 시작하기
+        </button>
+        <button
+          type="button"
+          className="social-btn naver"
+          onClick={() => {
+            window.location.href = 'https://mockstocks.duckdns.org/oauth2/authorization/naver';
+          }}
+        >
+          네이버로 시작하기
+        </button>
+      </div>
     </form>
   );
 };

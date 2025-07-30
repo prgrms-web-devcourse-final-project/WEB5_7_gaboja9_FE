@@ -45,8 +45,7 @@ export const useAuth = () => {
     } catch (error) {
       console.error('로그아웃 API 호출 실패:', error);
     } finally {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      localStorage.clear();
       setIsLoggedIn(false);
     }
   };
@@ -67,3 +66,5 @@ export const useAuth = () => {
     passwordReset,
   };
 };
+
+

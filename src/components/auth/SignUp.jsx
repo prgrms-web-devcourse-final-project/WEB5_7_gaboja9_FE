@@ -72,7 +72,7 @@ const SignUp = () => {
     }
 
     const params = { email: email.trim() };
-    console.log(params);
+
     const result = await fetchEmail(params);
     // 여기에 이메일 인증 코드 발송 로직을 추가합니다.
     if (!result.success) {
@@ -142,21 +142,6 @@ const SignUp = () => {
       <button type="submit" className="submit-btn">
         가입하기
       </button>
-
-      <div className="social-login">
-        <div className="divider">
-          <span>OR</span>
-        </div>
-        <button type="button" className="social-btn kakao">
-          카카오로 시작하기
-        </button>
-        <button type="button" className="social-btn google">
-          Google로 시작하기
-        </button>
-        <button type="button" className="social-btn naver">
-          네이버로 시작하기
-        </button>
-      </div>
     </form>
   );
 };

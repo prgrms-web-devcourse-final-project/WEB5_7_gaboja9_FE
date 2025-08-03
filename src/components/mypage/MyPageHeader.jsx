@@ -1,13 +1,13 @@
 import classNames from 'classnames';
 import { useAtom } from 'jotai';
 
-import { chargeCash, fetchUserInfo } from '@/api/user';
+import { chargeCash } from '@/api/user';
 import useModal from '@/hooks/useModal';
 import { memberInfoAtom } from '@/store/user';
 
 const MyPageHeader = () => {
   const [memberInfo, setMemberInfo] = useAtom(memberInfoAtom);
-  const { openConfirm, openAlert } = useModal();
+  const { openPrompt, openAlert } = useModal();
 
   const nickname = memberInfo.nickname;
   const profileImage = memberInfo.profileImage;
@@ -18,17 +18,32 @@ const MyPageHeader = () => {
   const totalProfitRate = memberInfo.totalProfitRate;
 
   const handleCharge = () => {
-    openConfirm('1,000,000원을 충전하시겠습니까?', async () => {
-      try {
-        await chargeCash();
-        const updatedUserInfo = await fetchUserInfo();
-        setMemberInfo(updatedUserInfo);
-        openAlert('충전이 완료되었습니다.');
-      } catch (error) {
-        console.error('충전 실패:', error);
-        openAlert('충전에 실패했습니다.');
-      }
-    });
+    openPrompt(
+      '충전할 금액을 입력해주세요.',
+      async (amount) => {
+        const chargeAmount = Number(amount);
+        if (isNaN(chargeAmount) || chargeAmount <= 0) {
+          openAlert('올바른 금액을 입력해주세요.');
+          return;
+        }
+
+        try {
+          const response = await chargeCash({ chargeAmount: chargeAmount });
+          if (response.success) {
+            const popup = window.open(response.data.next_redirect_pc_url, 'kakaopay-popup', 'width=800,height=600');
+            if (!popup) {
+              openAlert('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.');
+            }
+          } else {
+            throw new Error(response.message || '결제 준비에 실패했습니다.');
+          }
+        } catch (error) {
+          console.error('충전 준비 실패:', error);
+          openAlert(error.message || '충전 중 오류가 발생했습니다.');
+        }
+      },
+      () => {},
+    );
   };
 
   return (

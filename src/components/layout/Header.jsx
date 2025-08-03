@@ -24,12 +24,14 @@ const Header = () => {
     navigate('/login');
   };
 
-  const handleMyPageClick = (e) => {
+  const handleClickTab = (e) => {
     if (!isLoggedIn) {
       e.preventDefault();
       openAlert('로그인이 필요한 서비스입니다.');
     }
   };
+
+  const isStockActive = location.pathname.startsWith('/stock');
 
   return (
     <header className="header">
@@ -38,18 +40,26 @@ const Header = () => {
           MockStock
         </NavLink>
         <nav className="header__nav">
-          <NavLink to="/" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          <NavLink
+            to="/dashboard"
+            onClick={handleClickTab}
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+          >
             대시보드
           </NavLink>
-          <NavLink to="/stocks" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          <NavLink to="/" className={({ isActive }) => (isActive || isStockActive ? 'nav-link active' : 'nav-link')}>
             주식 거래
           </NavLink>
-          <NavLink to="/ranking" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          <NavLink
+            to="/ranking"
+            onClick={handleClickTab}
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+          >
             랭킹
           </NavLink>
           <NavLink
             to="/mypage"
-            onClick={handleMyPageClick}
+            onClick={handleClickTab}
             className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
             마이페이지

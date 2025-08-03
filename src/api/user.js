@@ -47,7 +47,7 @@ export const updateUserInfo = async (params) => {
   return response.data;
 };
 
-export const chargeCash = async () => {
-  const response = await axiosInstance.post('/members/me/charge');
+export const chargeCash = async (params) => {
+  const response = await axiosInstance.post('/payments/ready', params);
   return response.data;
 };

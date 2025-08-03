@@ -142,7 +142,7 @@ const TransactionHistory = () => {
                 <div className="info-group">
                   <span className="tx-date">{tx.date}</span>
                   <div className="stock-info">
-                    <span className="stock-name">{tx.name}</span>
+                    <span className="stock-name">{tx?.name}</span>
                     <span className="stock-id">({tx.stockId})</span>
                   </div>
                   <div className="tx-details">

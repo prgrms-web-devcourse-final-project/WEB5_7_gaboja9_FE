@@ -894,3 +894,24 @@
 .react-datepicker__triangle {
   display: none;
 }
+
+.bankruptcy-card {
+  border: 1px solid #f9a825;
+  .card-title {
+    color: #f9a825;
+  }
+}
+
+.bankruptcy-description {
+  color: $color-text-secondary;
+  line-height: 1.6;
+}
+
+.submit-btn {
+  &.warning {
+    background-color: #f9a825;
+    &:hover {
+      background-color: lighten(#f9a825, 5%);
+    }
+  }
+}

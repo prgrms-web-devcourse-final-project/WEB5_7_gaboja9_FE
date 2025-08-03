@@ -4,7 +4,13 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { buyLimitOrder, buyMarketOrder, sellLimitOrder, sellMarketOrder } from '@/api/order';
-import { fetchChartData, fetchPastChartData } from '@/api/stock';
+import {
+  fetchChartData,
+  fetchPastChartData,
+  addFavoriteStock,
+  removeFavoriteStock,
+  fetchFavoriteStocks,
+} from '@/api/stock';
 import { fetchPortfolios, fetchUserInfo } from '@/api/user';
 import CustomSelect from '@/components/common/CustomSelect';
 import OrderBook from '@/components/stockDetail/OrderBook';
@@ -26,10 +32,11 @@ const StockDetailPage = () => {
   const [chartData, setChartData] = useState([]);
   const [isChartLoading, setIsChartLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [timeframe, setTimeframe] = useState('daily');
+  const [timeframe, setTimeframe] = useState('minute');
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [portfolio, setPortfolio] = useState(null);
   const lastTickRef = useRef(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const realtimeData = realtimePrices[stockId] || {};
   const currentPrice = realtimeData.currentPrice || stockInfo.previousClosePrice;
@@ -83,7 +90,17 @@ const StockDetailPage = () => {
       const portfolioData = await fetchPortfolios();
       setPortfolio(portfolioData);
     };
+    const checkFavorite = async () => {
+      try {
+        const favorites = await fetchFavoriteStocks();
+        setIsFavorite(favorites.some((fav) => fav.stockCode === stockId));
+      } catch (error) {
+        console.error('관심 종목 확인 실패:', error);
+      }
+    };
+
     getPortfolio();
+    checkFavorite();
   }, [stockId, allStocks]);
 
   useEffect(() => {
@@ -117,24 +134,42 @@ const StockDetailPage = () => {
     }
   };
 
+  const handleToggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await removeFavoriteStock(stockId);
+        openAlert('관심 종목에서 해제되었습니다.');
+      } else {
+        await addFavoriteStock(stockId);
+        openAlert('관심 종목으로 등록되었습니다.');
+      }
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error('관심 종목 처리 실패:', error);
+      openAlert('관심 종목 처리에 실패했습니다.');
+    }
+  };
+
   const handleOrderSubmit = async (order) => {
+    const { type, priceType, quantity, price } = order;
     const orderFunctions = {
       buy: { limit: buyLimitOrder, market: buyMarketOrder },
       sell: { limit: sellLimitOrder, market: sellMarketOrder },
     };
-    const orderDetails = { stockCode: stockId, quantity: order.quantity, price: order.price };
+    const orderDetails = { stockName: stockInfo.name, stockCode: stockId, quantity, price };
 
     openConfirm(
-      `${order.quantity.toLocaleString()}주를 ${order.priceType === 'limit' ? order.price.toLocaleString() + '원에' : '시장가로'} ${order.type === 'buy' ? '매수' : '매도'}하시겠습니까?`,
+      `${quantity.toLocaleString()}주를 ${priceType === 'limit' ? price.toLocaleString() + '원에' : '시장가로'} ${type === 'buy' ? '매수' : '매도'}하시겠습니까?`,
       async () => {
         try {
-          await orderFunctions[order.type][order.priceType](orderDetails);
+          await orderFunctions[type][priceType](orderDetails);
           openAlert('주문이 성공적으로 체결되었습니다.');
           const updatedUserInfo = await fetchUserInfo();
           setMemberInfo(updatedUserInfo);
           const updatedPortfolio = await fetchPortfolios();
           setPortfolio(updatedPortfolio);
         } catch (err) {
+          console.error('주문 실패:', err);
           openAlert(err.response?.data?.message || '주문 처리에 실패했습니다.');
         }
       },
@@ -144,25 +179,51 @@ const StockDetailPage = () => {
   if (error) return <div className="loading-message">{error}</div>;
 
   const timeOptions = [
+    { value: 'minute', label: '분봉' },
     { value: 'daily', label: '일봉' },
     { value: 'weekly', label: '주봉' },
-    { value: 'minute', label: '분봉' },
   ];
 
   return (
     <div className="stock-detail-page">
       <header className="stock-header">
-        <div className="stock-header__info">
-          <h1 className="stock-name">{stockInfo.name}</h1>
-          <p className="stock-code">({stockId})</p>
-        </div>
-        <div className="stock-header__price">
-          <span className={classNames('current-price', { positive: changeRate > 0, negative: changeRate < 0 })}>
-            {currentPrice.toLocaleString()}원
-          </span>
-          <span className={classNames('change-info', { positive: changeRate > 0, negative: changeRate < 0 })}>
-            {changeRate >= 0 ? '▲' : '▼'} {changeValue.toLocaleString()} ({changeRate.toFixed(2)}%)
-          </span>
+        <div className="stock-header__left">
+          <div className="stock-header__info">
+            <h1 className="stock-name">{stockInfo.name}</h1>
+            <p className="stock-code">({stockId})</p>
+            <button
+              onClick={handleToggleFavorite}
+              className="favorite-btn"
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                marginLeft: '0.5rem',
+                padding: 0,
+                outline: 'none',
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill={isFavorite ? '#f44336' : 'none'}
+                stroke={isFavorite ? '#f44336' : '#FFFFFF'}
+                strokeWidth="2"
+              >
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3c3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </button>
+          </div>
+          <div className="stock-header__price">
+            <span className={classNames('current-price', { positive: changeRate > 0, negative: changeRate < 0 })}>
+              {currentPrice.toLocaleString()}원
+            </span>
+            <span className={classNames('change-info', { positive: changeRate > 0, negative: changeRate < 0 })}>
+              {changeRate >= 0 ? '▲' : '▼'} {changeValue.toLocaleString()} ({changeRate.toFixed(2)}%)
+            </span>
+          </div>
         </div>
         <div className="stock-header__actions">
           <CustomSelect options={timeOptions} value={timeframe} onChange={setTimeframe} />

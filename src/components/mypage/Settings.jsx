@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { fetchNotificationSettings, updateNotificationSettings } from '@/api/notification';
+import { applyForBankruptcy } from '@/api/user';
 import useModal from '@/hooks/useModal';
 
 const Settings = () => {
@@ -62,6 +63,22 @@ const Settings = () => {
         openAlert('알림 설정 저장에 실패했습니다. 다시 시도해주세요.');
       }
     });
+  };
+
+  const handleBankruptcy = () => {
+    openConfirm(
+      '정말로 파산 신청을 하시겠습니까?\n모든 자산이 초기화되며, 기본 자금이 다시 지급됩니다.',
+      async () => {
+        try {
+          await applyForBankruptcy();
+          openAlert('파산 신청이 처리되었습니다. 재로그인 후 자산을 확인해주세요.');
+        } catch (error) {
+          console.error('파산 신청 실패:', error);
+          openAlert('파산 신청에 실패했습니다. 관리자에게 문의해주세요.');
+        }
+      },
+      () => {},
+    );
   };
 
   const handleWithdrawal = () => {
@@ -145,6 +162,18 @@ const Settings = () => {
         <div className="card-actions">
           <button className="submit-btn" onClick={handleSaveSettings}>
             알림 설정 저장
+          </button>
+        </div>
+      </div>
+
+      <div className="setting-card bankruptcy-card">
+        <h3 className="card-title">파산 신청</h3>
+        <p className="bankruptcy-description">
+          파산 신청 시 보유 주식과 현금이 초기화되고, 기본 자금이 다시 지급됩니다.
+        </p>
+        <div className="card-actions">
+          <button className="submit-btn warning" onClick={handleBankruptcy}>
+            파산 신청
           </button>
         </div>
       </div>

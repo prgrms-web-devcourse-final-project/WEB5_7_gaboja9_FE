@@ -44,7 +44,27 @@ const useModal = () => {
     });
   };
 
-  return { openAlert, openConfirm };
+  const openPrompt = (message, onConfirm, onCancel) => {
+    setModalState({
+      isOpen: true,
+      type: 'prompt',
+      message,
+      onConfirm: (inputValue) => {
+        closeModal();
+        if (onConfirm) {
+          setTimeout(() => onConfirm(inputValue), 0);
+        }
+      },
+      onCancel: () => {
+        closeModal();
+        if (onCancel) {
+          setTimeout(onCancel, 0);
+        }
+      },
+    });
+  };
+
+  return { openAlert, openConfirm, openPrompt };
 };
 
 export default useModal;

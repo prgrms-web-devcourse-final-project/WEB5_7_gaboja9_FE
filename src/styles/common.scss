@@ -170,6 +170,26 @@
       }
     }
   }
+
+  .modal-input-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  .modal-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid $color-border;
+    background-color: $color-background-light;
+    border-radius: $border-radius-base;
+    color: $color-text-primary;
+    font-size: 1rem;
+    text-align: center;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary-blue;
+    }
+  }
 }
 
 @keyframes fadeIn {

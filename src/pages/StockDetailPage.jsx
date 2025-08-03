@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'; 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ import OrderBook from '@/components/stockDetail/OrderBook';
 import OrderPanel from '@/components/stockDetail/OrderPanel';
 import StockChart from '@/components/stockDetail/StockChart';
 import useModal from '@/hooks/useModal';
-import { stocksAtom, stockPricesAtom } from '@/store/atoms';
+import { stocksAtom, stockPricesAtom, loadingAtom } from '@/store/atoms'; 
 import { memberInfoAtom } from '@/store/user';
 
 const StockDetailPage = () => {
@@ -27,10 +27,10 @@ const StockDetailPage = () => {
   const allStocks = useAtomValue(stocksAtom);
   const realtimePrices = useAtomValue(stockPricesAtom);
   const [, setMemberInfo] = useAtom(memberInfoAtom);
+  const setIsLoading = useSetAtom(loadingAtom); 
 
   const [stockInfo, setStockInfo] = useState({ name: '', previousClosePrice: 0 });
   const [chartData, setChartData] = useState([]);
-  const [isChartLoading, setIsChartLoading] = useState(true);
   const [error, setError] = useState(null);
   const [timeframe, setTimeframe] = useState('minute');
   const [selectedPrice, setSelectedPrice] = useState(0);
@@ -56,7 +56,7 @@ const StockDetailPage = () => {
 
   const loadChart = useCallback(
     async (selectedTimeframe) => {
-      setIsChartLoading(true);
+      setIsLoading(true);
       try {
         const data = await fetchChartData(stockId, selectedTimeframe);
         const reversedData = data.data.slice().reverse();
@@ -75,10 +75,10 @@ const StockDetailPage = () => {
       } catch (err) {
         setError('차트 데이터를 불러오는 데 실패했습니다.');
       } finally {
-        setIsChartLoading(false);
+        setIsLoading(false);
       }
     },
-    [stockId, currentPrice],
+    [stockId, currentPrice, setIsLoading],
   );
 
   useEffect(() => {
@@ -124,6 +124,7 @@ const StockDetailPage = () => {
   const handleLoadMore = async () => {
     if (chartData.length === 0) return;
     const oldestTimestamp = chartData[0].time;
+    setIsLoading(true);
     try {
       const pastData = await fetchPastChartData(stockId, timeframe, oldestTimestamp);
       if (pastData.data.length > 0) {
@@ -131,6 +132,8 @@ const StockDetailPage = () => {
       }
     } catch (error) {
       console.error('과거 데이터 로딩 실패:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -161,6 +164,7 @@ const StockDetailPage = () => {
     openConfirm(
       `${quantity.toLocaleString()}주를 ${priceType === 'limit' ? price.toLocaleString() + '원에' : '시장가로'} ${type === 'buy' ? '매수' : '매도'}하시겠습니까?`,
       async () => {
+        setIsLoading(true);
         try {
           await orderFunctions[type][priceType](orderDetails);
           openAlert('주문이 성공적으로 체결되었습니다.');
@@ -171,6 +175,8 @@ const StockDetailPage = () => {
         } catch (err) {
           console.error('주문 실패:', err);
           openAlert(err.response?.data?.message || '주문 처리에 실패했습니다.');
+        } finally {
+          setIsLoading(false);
         }
       },
     );
@@ -231,11 +237,7 @@ const StockDetailPage = () => {
       </header>
 
       <div className="chart-area">
-        {isChartLoading ? (
-          <div className="loading-message">차트 데이터를 불러오는 중입니다...</div>
-        ) : (
-          <StockChart data={chartData} timeframe={timeframe} onLoadMore={handleLoadMore} />
-        )}
+        <StockChart data={chartData} timeframe={timeframe} onLoadMore={handleLoadMore} />
       </div>
 
       <section className="order-section">

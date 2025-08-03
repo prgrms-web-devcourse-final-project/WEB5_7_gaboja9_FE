@@ -2,7 +2,7 @@ import ReactECharts from 'echarts-for-react';
 
 const AssetCompositionChart = ({ stocks, cash }) => {
   const chartData = stocks.map((stock) => ({
-    name: stock.stockName, // 'name'을 'stockName'으로 변경
+    name: stock.stockName,
     value: stock.currentPrice * stock.quantity,
   }));
 

@@ -1,10 +1,11 @@
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { fetchRanks } from '@/api/user';
 import RankingSummaryCards from '@/components/ranking/RankingSummaryCards';
 import RankingTable from '@/components/ranking/RankingTable';
 import RankingTabs from '@/components/ranking/RankingTabs';
+import { loadingAtom } from '@/store/atoms';
 import { memberInfoAtom } from '@/store/user';
 
 const RANKING_TYPE_MAP = {
@@ -24,7 +25,7 @@ const RankingPage = () => {
     currentPage: 0,
     hasNext: false,
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const setIsLoading = useSetAtom(loadingAtom);
 
   const memberInfo = useAtomValue(memberInfoAtom);
   const myUserId = memberInfo?.memberId;
@@ -46,7 +47,6 @@ const RankingPage = () => {
 
   const loadRankingData = useCallback(
     async (page = 0, loadMore = false) => {
-      if (isLoading) return;
       setIsLoading(true);
 
       try {
@@ -78,14 +78,14 @@ const RankingPage = () => {
         setIsLoading(false);
       }
     },
-    [selectedRankingTab, myUserId, isLoading],
+    [selectedRankingTab, myUserId, setIsLoading],
   );
 
   useEffect(() => {
     if (myUserId) {
       loadRankingData(0);
     }
-  }, [selectedRankingTab, myUserId]);
+  }, [selectedRankingTab, myUserId, loadRankingData]); 
 
   const handleTabChange = (tabId) => {
     setSelectedRankingTab(tabId);
@@ -118,7 +118,6 @@ const RankingPage = () => {
         selectedRankingTab={selectedRankingTab}
         onLoadMore={handleLoadMore}
         hasMore={pagination.hasNext}
-        isLoading={isLoading}
       />
     </div>
   );

@@ -4,12 +4,14 @@ import { MOCK_USER_ASSETS, MOCK_OWNED_STOCKS, MOCK_WATCHLIST, MOCK_RECENT_TRANSA
 
 export const modalStateAtom = atom({
   isOpen: false,
-  type: 'alert', // 'alert', 'confirm', 'prompt'
+  type: 'alert', 
   message: '',
   onConfirm: null,
   onCancel: null,
   inputValue: null,
 });
+
+export const loadingAtom = atom(false);
 
 export const userAssetsAtom = atom(MOCK_USER_ASSETS);
 export const ownedStocksAtom = atom(MOCK_OWNED_STOCKS);

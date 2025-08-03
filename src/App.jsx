@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 
+import LoadingSpinner from '@/components/common/LoadingSpinner';
 import Modal from '@/components/common/Modal';
 import Layout from '@/components/layout/Layout';
 import AuthPage from '@/pages/AuthPage';
@@ -12,6 +13,7 @@ import StocksPage from '@/pages/StocksPage';
 const App = () => {
   return (
     <>
+      <LoadingSpinner />
       <Modal />
       <Routes>
         <Route path="/login" element={<AuthPage />} />

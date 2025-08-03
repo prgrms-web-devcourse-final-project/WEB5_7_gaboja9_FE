@@ -1,9 +1,11 @@
 import classNames from 'classnames';
+import { useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { fetchTradeHistory } from '@/api/user';
+import { loadingAtom } from '@/store/atoms';
 
 const TransactionHistory = () => {
   const [transactions, setTransactions] = useState([]);
@@ -11,44 +13,47 @@ const TransactionHistory = () => {
     pageNumber: 0,
     last: true,
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const setIsLoading = useSetAtom(loadingAtom);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const loadTransactions = useCallback(async (page, loadMore = false) => {
-    setIsLoading(true);
-    try {
-      const data = await fetchTradeHistory(page, 10);
-      const formattedData = data.content.map((tx) => ({
-        id: `${tx.tradeDateTime}-${tx.stockCode}-${tx.quantity}`,
-        type: tx.tradeType === 'BUY' ? '매수' : '매도',
-        name: tx.stockName,
-        stockId: tx.stockCode,
-        date: new Date(tx.tradeDateTime).toLocaleDateString('ko-KR'),
-        quantity: tx.quantity,
-        price: tx.price,
-        amount: tx.totalAmount,
-      }));
-      setTransactions((prev) => (loadMore ? [...prev, ...formattedData] : formattedData));
-      setPagination({
-        pageNumber: data.pageable.pageNumber,
-        last: data.last,
-      });
-    } catch (error) {
-      console.error('Failed to fetch transaction history:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const loadTransactions = useCallback(
+    async (page, loadMore = false) => {
+      setIsLoading(true);
+      try {
+        const data = await fetchTradeHistory(page, 10);
+        const formattedData = data.content.map((tx) => ({
+          id: `${tx.tradeDateTime}-${tx.stockCode}-${tx.quantity}`,
+          type: tx.tradeType === 'BUY' ? '매수' : '매도',
+          name: tx.stockName,
+          stockId: tx.stockCode,
+          date: new Date(tx.tradeDateTime).toLocaleDateString('ko-KR'),
+          quantity: tx.quantity,
+          price: tx.price,
+          amount: tx.totalAmount,
+        }));
+        setTransactions((prev) => (loadMore ? [...prev, ...formattedData] : formattedData));
+        setPagination({
+          pageNumber: data.pageable.pageNumber,
+          last: data.last,
+        });
+      } catch (error) {
+        console.error('Failed to fetch transaction history:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setIsLoading],
+  );
 
   useEffect(() => {
     loadTransactions(0);
   }, [loadTransactions]);
 
   const handleLoadMore = () => {
-    if (!pagination.last && !isLoading) {
+    if (!pagination.last) {
       loadTransactions(pagination.pageNumber + 1, true);
     }
   };
@@ -128,11 +133,7 @@ const TransactionHistory = () => {
       </div>
 
       <div className="transaction-list">
-        {!isLoading && filteredTransactions.length === 0 ? (
-          <div className="no-data-message">
-            <p>거래 내역이 없습니다.</p>
-          </div>
-        ) : (
+        {filteredTransactions.length > 0 ? (
           filteredTransactions.map((tx) => (
             <div key={tx.id} className="transaction-item">
               <div className="item-left">
@@ -155,13 +156,17 @@ const TransactionHistory = () => {
               </div>
             </div>
           ))
+        ) : (
+          <div className="no-data-message">
+            <p>거래 내역이 없습니다.</p>
+          </div>
         )}
       </div>
 
       {!pagination.last && (
         <div style={{ textAlign: 'center', padding: '1rem' }}>
-          <button onClick={handleLoadMore} disabled={isLoading} className="load-more-button">
-            {isLoading ? '로딩 중...' : '더 보기'}
+          <button onClick={handleLoadMore} className="load-more-button">
+            더 보기
           </button>
         </div>
       )}

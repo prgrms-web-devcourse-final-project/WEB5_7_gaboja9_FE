@@ -7,7 +7,6 @@ const OrderBook = ({ onPriceSelect, previousClosePrice, currentPrice }) => {
 
   const prices = useMemo(() => {
     if (!currentPrice) return [];
-    // 호가 단위를 주가에 따라 동적으로 설정 (실제 시스템과 유사하게)
     const getStep = (price) => {
       if (price >= 500000) return 1000;
       if (price >= 100000) return 500;
@@ -39,7 +38,7 @@ const OrderBook = ({ onPriceSelect, previousClosePrice, currentPrice }) => {
       </div>
       <div className="order-book__content" ref={scrollRef}>
         {prices.map((price) => {
-          if (price <= 0) return null; // 가격이 0 이하인 경우 표시하지 않음
+          if (price <= 0) return null;
           const percentage = previousClosePrice > 0 ? ((price - previousClosePrice) / previousClosePrice) * 100 : 0;
           const isCurrentPrice = price === currentPrice;
 

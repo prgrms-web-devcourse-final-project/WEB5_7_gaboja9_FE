@@ -40,6 +40,7 @@ const Modal = () => {
         {modalState.type === 'prompt' && (
           <div className="modal-input-wrapper">
             <input
+              type="number"
               className="modal-input"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}

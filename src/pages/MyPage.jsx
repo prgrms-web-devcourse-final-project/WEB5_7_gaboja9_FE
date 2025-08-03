@@ -1,4 +1,3 @@
-import { useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,23 +9,23 @@ import Settings from '@/components/mypage/Settings';
 import TransactionHistory from '@/components/mypage/TransactionHistory';
 import { MOCK_MAIL_DATA } from '@/constants/mockData';
 import useModal from '@/hooks/useModal';
-import { isLoggedInAtom } from '@/store/user';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState('portfolio');
 
   const navigate = useNavigate();
-  const isLoggedIn = useAtomValue(isLoggedInAtom);
 
   const { openAlert } = useModal();
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) {
       openAlert('로그인이 필요합니다.', () => {
         navigate('/login');
       });
     }
-  }, [isLoggedIn]);
+  }, []);
 
   const unreadCount = MOCK_MAIL_DATA.filter((n) => !n.isRead).length;
 

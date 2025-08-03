@@ -17,18 +17,16 @@ const MailItem = ({ mail, isExpanded, onToggle }) => {
   };
 
   return (
-    <div className={classNames('mail-item', { unread: !mail.isRead })}>
+    <div className={classNames('mail-item', { unread: mail.unread })}>
       <div className="mail-summary" onClick={onToggle}>
         <div className="summary-left">
           <span className="icon">{getIcon(mail.type)}</span>
           <div className="mail-details">
-            <span className="sender">{mail.sender}</span>
-            <span className="title">{mail.title}</span>
+            <span className="title">{mail.subject}</span>
           </div>
         </div>
         <div className="summary-right">
-          {!mail.isRead && <div className="unread-dot" />}
-          <span className="date">{mail.date}</span>
+          {mail.unread && <div className="unread-dot" />}
           <span className="chevron">{isExpanded ? '▲' : '▼'}</span>
         </div>
       </div>

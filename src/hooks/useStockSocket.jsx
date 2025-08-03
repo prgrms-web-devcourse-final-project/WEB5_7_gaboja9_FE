@@ -7,6 +7,8 @@ export const useStockSocket = (stockCode) => {
   const [socketError, setSocketError] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
+  console.log('useStockSocket hook rendering...');
+
   const stompClient = useRef(null);
   const subscription = useRef(null);
 
@@ -14,34 +16,33 @@ export const useStockSocket = (stockCode) => {
     if (!stockCode) {
       return;
     }
-    console.log('Connecting to stock socket for code:', stockCode);
-
-    // const socket = new SockJS('https://mockstocks.duckdns.org/ws-stock');
-
     const client = new Client({
-      brokerURL: 'wss://mockstocks.duckdns.org/ws-stock/websocket',
+      webSocketFactory: () => new SockJS('https://mockstocks.duckdns.org/ws-stock'),
 
-      heartbeatIncoming: 0, // 하트비트 설정도 함께 테스트
+      onWebSocketError: (error) => {
+        console.error('WebSocket Error', error);
+      },
+      onWebSocketClose: (event) => {
+        console.log('WebSocket Closed', event);
+      },
+
+      heartbeatIncoming: 0,
       heartbeatOutgoing: 0,
 
-      // webSocketFactory: () => socket,
       debug: (str) => {
         console.log(new Date(), str);
       },
       onConnect: () => {
         console.log(`[STOMP] ${stockCode}에 대한 구독을 시도합니다.`);
-
         setIsConnected(true);
         setSocketError(null);
 
-        // 1. 에러 구독
         client.subscribe('/user/queue/errors', (message) => {
           const error = JSON.parse(message.body);
           console.error('소켓 에러 수신:', error);
           setSocketError(error);
         });
 
-        // 2. 특정 주식 데이터 구독
         if (subscription.current) {
           subscription.current.unsubscribe();
         }

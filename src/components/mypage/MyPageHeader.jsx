@@ -11,8 +11,8 @@ const MyPageHeader = () => {
   const tradeCount = memberInfo.tradeCnt;
   const daysActive = memberInfo.period;
   const rank = memberInfo.ranking;
-  const totalAssets = memberInfo.totalEvaluationAmount || 0;
-  const initialAsset = memberInfo.totalEvaluationAmount - memberInfo.totalProfit;
+  const totalAssets = memberInfo.totalCashBalance || 0;
+  const initialAsset = memberInfo.totalCashBalance - memberInfo.totalProfitRate;
 
   // 총 수익률 계산
   const returnRate = initialAsset > 0 ? ((totalAssets - initialAsset) / initialAsset) * 100 : 0;

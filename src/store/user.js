@@ -1,10 +1,11 @@
 import { atom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 
-const initialMemberInfo = {
+export const initialMemberInfo = {
   nickname: '',
   profileImage: '',
-  totalProfit: 0.0,
-  totalEvaluationAmount: 0,
+  totalProfitRate: 0,
+  totalCashBalance: 0,
   tradeCnt: 0,
   ranking: 0,
   period: 0,
@@ -13,17 +14,4 @@ const initialMemberInfo = {
 
 export const memberInfoAtom = atom(initialMemberInfo);
 
-export const setMemberInfoAtom = atom(null, (get, set, newInfo) => {
-  set(memberInfoAtom, newInfo);
-});
-
-export const updateMemberInfoAtom = atom(null, (get, set, updatedInfo) => {
-  const currentState = get(memberInfoAtom);
-  set(memberInfoAtom, { ...currentState, ...updatedInfo });
-});
-
-export const isLoggedInAtom = atom(false);
-
-export const setIsLoggedInAtom = atom(null, (get, set, isLoggedIn) => {
-  set(isLoggedInAtom, isLoggedIn);
-});
+export const isLoggedInAtom = atomWithStorage('isLoggedIn', false);

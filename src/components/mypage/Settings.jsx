@@ -54,7 +54,7 @@ const Settings = () => {
     <div className="settings-section">
       <div className="setting-card">
         <h3 className="card-title">비밀번호 변경</h3>
-        <div className="form-group">
+        <div className="form-group-mypage">
           <label htmlFor="current-password">현재 비밀번호</label>
           <input
             id="current-password"
@@ -64,7 +64,7 @@ const Settings = () => {
             onChange={(e) => setCurrentPassword(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="form-group-mypage">
           <label htmlFor="new-password">새 비밀번호</label>
 
           <input

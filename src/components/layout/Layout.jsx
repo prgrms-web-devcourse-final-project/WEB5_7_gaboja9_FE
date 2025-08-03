@@ -1,17 +1,15 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { fetchUserData } from '@/api/user';
+import { fetchUserInfo } from '@/api/user';
 import Header from '@/components/layout/Header';
 import { useAuth } from '@/hooks/useAuth';
-import { setMemberInfoAtom } from '@/store/user';
-import { isLoggedInAtom } from '@/store/user';
+import { memberInfoAtom, isLoggedInAtom, initialMemberInfo } from '@/store/user';
 
 const Layout = () => {
-  const isLoggedIn = useAtomValue(isLoggedInAtom);
-
-  const [, setMemberInfo] = useAtom(setMemberInfoAtom);
+  const [isLoggedIn] = useAtom(isLoggedInAtom);
+  const [, setMemberInfo] = useAtom(memberInfoAtom);
 
   useAuth();
 
@@ -21,11 +19,16 @@ const Layout = () => {
     }
 
     const fetchData = async () => {
-      const userData = await fetchUserData();
-      setMemberInfo(userData);
+      const userData = await fetchUserInfo();
+
+      if (userData) {
+        setMemberInfo(userData);
+      } else {
+        setMemberInfo(initialMemberInfo);
+      }
     };
     fetchData();
-  }, [isLoggedIn, setMemberInfo]);
+  }, [isLoggedIn]);
 
   return (
     <>

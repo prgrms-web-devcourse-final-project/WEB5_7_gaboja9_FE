@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/hooks/useAuth';
@@ -7,8 +7,8 @@ import { isLoggedInAtom, memberInfoAtom } from '@/store/user';
 
 const Header = () => {
   const navigate = useNavigate();
-  const isLoggedIn = useAtomValue(isLoggedInAtom);
-  const memberInfo = useAtomValue(memberInfoAtom);
+  const [isLoggedIn] = useAtom(isLoggedInAtom);
+  const [memberInfo] = useAtom(memberInfoAtom);
 
   const { openAlert, openConfirm } = useModal();
   const { logout } = useAuth();
@@ -61,7 +61,7 @@ const Header = () => {
         </nav>
         {isLoggedIn ? (
           <div className="header__user-info">
-            <span>{memberInfo.nickname}님</span>
+            <span>{memberInfo?.nickname}님</span>
             <button className="logout-button" onClick={handleClickLogout}>
               로그아웃
             </button>

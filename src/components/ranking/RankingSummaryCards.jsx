@@ -5,7 +5,7 @@ const RankingSummaryCards = () => {
     <div className="ranking-summary-cards">
       <div className="summary-card">
         <div className="card-title">총 참여자 수</div>
-        <div className="card-value">123,456</div>
+        <div className="card-value">23</div>
       </div>
       <div className="summary-card positive-rate">
         <div className="card-title">수익률 달성자 비율</div>
@@ -17,7 +17,7 @@ const RankingSummaryCards = () => {
       </div>
       <div className="summary-card">
         <div className="card-title">파산 유저</div>
-        <div className="card-value">1,234</div>
+        <div className="card-value">5</div>
       </div>
     </div>
   );

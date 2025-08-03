@@ -1,13 +1,27 @@
 import classNames from 'classnames';
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useMemo } from 'react';
 
-const OrderBook = ({ orderBook, onPriceSelect, previousClosePrice, currentPrice }) => {
+const OrderBook = ({ onPriceSelect, previousClosePrice, currentPrice }) => {
   const scrollRef = useRef(null);
   const itemsRef = useRef({});
 
-  const { asks = [], bids = [] } = orderBook;
+  const prices = useMemo(() => {
+    if (!currentPrice) return [];
+    // 호가 단위를 주가에 따라 동적으로 설정 (실제 시스템과 유사하게)
+    const getStep = (price) => {
+      if (price >= 500000) return 1000;
+      if (price >= 100000) return 500;
+      if (price >= 50000) return 100;
+      if (price >= 10000) return 50;
+      if (price >= 5000) return 10;
+      if (price >= 1000) return 5;
+      return 1;
+    };
+    const step = getStep(currentPrice);
+    const roundedCurrentPrice = Math.round(currentPrice / step) * step;
 
-  const allPrices = [...new Set([...asks.map((a) => a.price), ...bids.map((b) => b.price)])].sort((a, b) => b - a);
+    return Array.from({ length: 31 }, (_, i) => roundedCurrentPrice + (15 - i) * step);
+  }, [currentPrice]);
 
   useLayoutEffect(() => {
     if (scrollRef.current && itemsRef.current[currentPrice]) {
@@ -24,10 +38,10 @@ const OrderBook = ({ orderBook, onPriceSelect, previousClosePrice, currentPrice 
         <div className="header-cell">호가</div>
       </div>
       <div className="order-book__content" ref={scrollRef}>
-        {allPrices.map((price) => {
-          const percentage = ((price - previousClosePrice) / previousClosePrice) * 100;
+        {prices.map((price) => {
+          if (price <= 0) return null; // 가격이 0 이하인 경우 표시하지 않음
+          const percentage = previousClosePrice > 0 ? ((price - previousClosePrice) / previousClosePrice) * 100 : 0;
           const isCurrentPrice = price === currentPrice;
-          const isBasePrice = price === previousClosePrice;
 
           return (
             <div
@@ -38,13 +52,11 @@ const OrderBook = ({ orderBook, onPriceSelect, previousClosePrice, currentPrice 
             >
               <div
                 className={classNames('price-cell', {
-                  opening: isBasePrice,
-                  ask: !isBasePrice && price > previousClosePrice, // 기준가보다 높으면 ask (상승)
-                  bid: !isBasePrice && price < previousClosePrice, // 기준가보다 낮으면 bid (하락)
+                  opening: price === previousClosePrice,
+                  ask: price > previousClosePrice,
+                  bid: price < previousClosePrice,
                 })}
               >
-                <div className="quantity-bar" />
-
                 <div className="price-info">
                   <span className="price-value">{price.toLocaleString()}</span>
                   <span className="price-percent">

@@ -19,8 +19,6 @@ const Mailbox = () => {
           id: index + 1,
         }));
 
-        console.log(mailsWithId);
-
         setMails(mailsWithId || MOCK_MAIL_DATA);
 
         return;
@@ -32,8 +30,6 @@ const Mailbox = () => {
 
     fetchMail();
   }, []);
-
-  console.log(mails);
 
   const filteredMails = useMemo(() => {
     switch (filter) {

@@ -1,18 +1,14 @@
 import classNames from 'classnames';
 import { useState, useEffect } from 'react';
 
-const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, orderBook }) => {
+const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, currentPrice }) => {
   const [orderType, setOrderType] = useState('buy');
   const [priceType, setPriceType] = useState('limit');
   const [price, setPrice] = useState(initialPrice);
   const [quantity, setQuantity] = useState('');
 
-  const executionPrice =
-    priceType === 'market'
-      ? (orderType === 'buy' ? orderBook.asks[0]?.price : orderBook.bids[0]?.price) || initialPrice
-      : price;
-
-  const maxBuyQty = Math.floor(availableCash / executionPrice);
+  const executionPrice = priceType === 'market' ? currentPrice : price;
+  const maxBuyQty = executionPrice > 0 ? Math.floor(availableCash / executionPrice) : 0;
 
   useEffect(() => {
     setPrice(initialPrice);
@@ -33,31 +29,30 @@ const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, orde
     } else {
       if (numericValue > ownedQuantity) numericValue = ownedQuantity;
     }
-
-    setQuantity(numericValue > 0 ? numericValue.toLocaleString() : '');
+    setQuantity(numericValue > 0 ? numericValue : '');
   };
 
   const handleMaxClick = () => {
     if (orderType === 'buy') {
-      setQuantity(maxBuyQty > 0 ? maxBuyQty.toLocaleString() : '0');
+      setQuantity(maxBuyQty > 0 ? maxBuyQty : '');
     } else {
-      setQuantity(ownedQuantity.toLocaleString());
+      setQuantity(ownedQuantity);
     }
   };
 
   const handleQuantityClick = (amount) => {
-    let newQty = Number(quantity.replace(/,/g, '') || 0) + amount;
+    let newQty = Number(quantity || 0) + amount;
     if (orderType === 'buy') {
       if (newQty > maxBuyQty) newQty = maxBuyQty;
     } else {
       if (newQty > ownedQuantity) newQty = ownedQuantity;
     }
-    setQuantity(newQty.toLocaleString());
+    setQuantity(newQty);
   };
 
-  const numericQuantity = Number(quantity.replace(/,/g, '') || 0);
+  const numericQuantity = Number(quantity || 0);
   const totalAmount = executionPrice * numericQuantity;
-  const fee = orderType === 'sell' ? totalAmount * 0.0001 : 0;
+  const fee = orderType === 'sell' ? totalAmount * 0.0025 : 0; // 매도 수수료 0.25%
   const finalAmount = orderType === 'buy' ? totalAmount : totalAmount - fee;
 
   const handleSubmit = (e) => {
@@ -69,14 +64,14 @@ const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, orde
     onSubmit({
       type: orderType,
       priceType: priceType,
-      price: priceType === 'limit' ? price : '시장가',
+      price: priceType === 'limit' ? price : executionPrice,
       quantity: numericQuantity,
-      totalAmount,
     });
     setQuantity('');
   };
 
   const isSellDisabled = orderType === 'sell' && ownedQuantity === 0;
+  const isBuyDisabled = orderType === 'buy' && availableCash < executionPrice && executionPrice > 0;
 
   return (
     <div className="order-panel">
@@ -137,23 +132,23 @@ const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, orde
             <input
               type="text"
               placeholder="수량을 입력하세요"
-              value={quantity}
+              value={quantity.toLocaleString()}
               onChange={handleQuantityChange}
               inputMode="numeric"
-              disabled={isSellDisabled}
+              disabled={isSellDisabled || isBuyDisabled}
             />
           </div>
           <div className="quantity-shortcuts">
-            <button type="button" onClick={() => handleQuantityClick(1)} disabled={isSellDisabled}>
+            <button type="button" onClick={() => handleQuantityClick(1)} disabled={isSellDisabled || isBuyDisabled}>
               1주
             </button>
-            <button type="button" onClick={() => handleQuantityClick(5)} disabled={isSellDisabled}>
+            <button type="button" onClick={() => handleQuantityClick(5)} disabled={isSellDisabled || isBuyDisabled}>
               5주
             </button>
-            <button type="button" onClick={() => handleQuantityClick(10)} disabled={isSellDisabled}>
+            <button type="button" onClick={() => handleQuantityClick(10)} disabled={isSellDisabled || isBuyDisabled}>
               10주
             </button>
-            <button type="button" onClick={handleMaxClick} disabled={isSellDisabled}>
+            <button type="button" onClick={handleMaxClick} disabled={isSellDisabled || isBuyDisabled}>
               최대
             </button>
           </div>
@@ -161,8 +156,8 @@ const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, orde
           <div className="order-summary">
             {orderType === 'sell' && fee > 0 && (
               <div className="summary-item">
-                <span>수수료(0.01%)</span>
-                <span>{fee.toLocaleString(undefined, { maximumFractionDigits: 0 })} 원</span>
+                <span>수수료(0.25%)</span>
+                <span>- {fee.toLocaleString(undefined, { maximumFractionDigits: 0 })} 원</span>
               </div>
             )}
             <div className="summary-item total">
@@ -171,7 +166,11 @@ const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, orde
             </div>
           </div>
 
-          <button type="submit" className={classNames('submit-btn', orderType)} disabled={isSellDisabled}>
+          <button
+            type="submit"
+            className={classNames('submit-btn', orderType)}
+            disabled={isSellDisabled || isBuyDisabled}
+          >
             {numericQuantity > 0 ? `${numericQuantity.toLocaleString()}주 ` : ''}
             {orderType === 'buy' ? '매수' : '매도'}
           </button>

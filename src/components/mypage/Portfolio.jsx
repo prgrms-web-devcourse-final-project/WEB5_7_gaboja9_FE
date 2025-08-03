@@ -1,31 +1,33 @@
 import classNames from 'classnames';
+import { useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 
 import { fetchPortfolios } from '@/api/user';
 import AssetCompositionChart from '@/components/mypage/AssetCompositionChart';
+import { loadingAtom } from '@/store/atoms';
 
 const Portfolio = () => {
   const [portfolioData, setPortfolioData] = useState(null);
+  const setIsLoading = useSetAtom(loadingAtom);
 
   useEffect(() => {
     const fetchPortfolioData = async () => {
+      setIsLoading(true);
       try {
         const result = await fetchPortfolios();
         setPortfolioData(result);
       } catch (error) {
         console.error('Failed to fetch portfolio data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchPortfolioData();
-  }, []);
+  }, [setIsLoading]);
 
   if (!portfolioData) {
-    return (
-      <div className="no-data-message" style={{ minHeight: '400px' }}>
-        <p>포트폴리오 데이터를 불러오는 중입니다...</p>
-      </div>
-    );
+    return null;
   }
 
   const { cashBalance, totalEvaluationAmount, totalProfit, totalProfitRate, portfolios } = portfolioData;

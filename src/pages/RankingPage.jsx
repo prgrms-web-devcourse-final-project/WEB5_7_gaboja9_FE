@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { fetchRanks } from '@/api/user';
 import RankingSummaryCards from '@/components/ranking/RankingSummaryCards';
 import RankingTable from '@/components/ranking/RankingTable';
+import RankingTableSkeleton from '@/components/ranking/RankingTableSkeleton';
 import RankingTabs from '@/components/ranking/RankingTabs';
 import { loadingAtom } from '@/store/atoms';
 import { memberInfoAtom } from '@/store/user';
@@ -25,6 +26,7 @@ const RankingPage = () => {
     currentPage: 0,
     hasNext: false,
   });
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const setIsLoading = useSetAtom(loadingAtom);
 
   const memberInfo = useAtomValue(memberInfoAtom);
@@ -47,7 +49,11 @@ const RankingPage = () => {
 
   const loadRankingData = useCallback(
     async (page = 0, loadMore = false) => {
-      setIsLoading(true);
+      if (!loadMore) {
+        setIsInitialLoading(true);
+      } else {
+        setIsLoading(true);
+      }
 
       try {
         const ranksType = RANKING_TYPE_MAP[selectedRankingTab];
@@ -75,6 +81,7 @@ const RankingPage = () => {
       } catch (error) {
         console.error('Failed to fetch ranking data:', error);
       } finally {
+        setIsInitialLoading(false);
         setIsLoading(false);
       }
     },
@@ -85,11 +92,13 @@ const RankingPage = () => {
     if (myUserId) {
       loadRankingData(0);
     }
-  }, [selectedRankingTab, myUserId, loadRankingData]); 
+  }, [selectedRankingTab, myUserId, loadRankingData]);
 
   const handleTabChange = (tabId) => {
     setSelectedRankingTab(tabId);
     setRankingData([]);
+    setMyRankData(null);
+    setPagination({ currentPage: 0, hasNext: false });
   };
 
   const handleLoadMore = () => {
@@ -112,13 +121,17 @@ const RankingPage = () => {
       </div>
       <RankingSummaryCards />
       <RankingTabs tabs={rankingTabs} selectedTab={selectedRankingTab} onTabChange={handleTabChange} />
-      <RankingTable
-        displayedData={rankingData}
-        myRankData={myRankData}
-        selectedRankingTab={selectedRankingTab}
-        onLoadMore={handleLoadMore}
-        hasMore={pagination.hasNext}
-      />
+      {isInitialLoading ? (
+        <RankingTableSkeleton />
+      ) : (
+        <RankingTable
+          displayedData={rankingData}
+          myRankData={myRankData}
+          selectedRankingTab={selectedRankingTab}
+          onLoadMore={handleLoadMore}
+          hasMore={pagination.hasNext}
+        />
+      )}
     </div>
   );
 };

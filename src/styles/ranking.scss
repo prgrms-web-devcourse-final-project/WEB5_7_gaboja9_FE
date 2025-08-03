@@ -219,3 +219,55 @@
     }
   }
 }
+
+.ranking-table.skeleton {
+  .skeleton-line {
+    background-color: $color-border;
+    border-radius: $border-radius-sm;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+
+  .rank-circle {
+    background-color: $color-border;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+
+  .user-details {
+    .nickname {
+      width: 80px;
+      height: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .sub-info {
+      width: 120px;
+      height: 0.875rem;
+    }
+  }
+
+  .value-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    .value {
+      width: 100px;
+      height: 1rem;
+    }
+    .secondary-value {
+      width: 80px;
+      height: 0.875rem;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background-color: $color-border;
+  }
+  50% {
+    background-color: lighten($color-border, 5%);
+  }
+  100% {
+    background-color: $color-border;
+  }
+}

@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,12 +7,13 @@ import { fetchPortfolios } from '@/api/user';
 import AssetSummaryCard from '@/components/dashboard/AssetSummaryCard';
 import DashboardStockList from '@/components/dashboard/DashboardStockList';
 import RecentTransactions from '@/components/dashboard/RecentTransactions';
-import { stockPricesAtom } from '@/store/atoms';
+import { stockPricesAtom, loadingAtom } from '@/store/atoms';
 import { isLoggedInAtom } from '@/store/user';
 
 const DashboardPage = () => {
   const isLoggedIn = useAtomValue(isLoggedInAtom);
   const navigate = useNavigate();
+  const setIsLoading = useSetAtom(loadingAtom);
 
   const [portfolio, setPortfolio] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
@@ -20,18 +21,22 @@ const DashboardPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const portfolioData = await fetchPortfolios();
+        const [portfolioData, favoriteData] = await Promise.all([fetchPortfolios(), fetchFavoriteStocks()]);
         setPortfolio(portfolioData);
-        const favoriteData = await fetchFavoriteStocks();
         setWatchlist(favoriteData);
       } catch (error) {
         console.error('대시보드 데이터 로딩 실패:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, [isLoggedIn, navigate]);
+    if (isLoggedIn) {
+      fetchData();
+    }
+  }, [isLoggedIn, navigate, setIsLoading]);
 
   const ownedStocksWithLivePrice =
     portfolio?.portfolios.map((stock) => ({
@@ -51,11 +56,7 @@ const DashboardPage = () => {
     })) || [];
 
   if (!isLoggedIn || !portfolio) {
-    return (
-      <div className="loading-message" style={{ textAlign: 'center', padding: '5rem' }}>
-        데이터를 불러오는 중입니다...
-      </div>
-    );
+    return null;
   }
 
   return (

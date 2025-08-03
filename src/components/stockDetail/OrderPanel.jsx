@@ -1,16 +1,18 @@
 import classNames from 'classnames';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { chargeCash } from '@/api/user';
 import useModal from '@/hooks/useModal';
+import { loadingAtom } from '@/store/atoms';
 import { isLoggedInAtom } from '@/store/user';
 
 const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, currentPrice }) => {
   const isLoggedIn = useAtomValue(isLoggedInAtom);
   const { openAlert, openConfirm } = useModal();
   const navigate = useNavigate();
+  const setIsLoading = useSetAtom(loadingAtom);
 
   const [orderType, setOrderType] = useState('buy');
   const [priceType, setPriceType] = useState('limit');
@@ -60,6 +62,16 @@ const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, curr
   const fee = orderType === 'sell' ? totalAmount * 0.0025 : 0;
   const finalAmount = orderType === 'buy' ? totalAmount : totalAmount - fee;
 
+  const handlePopupClose = (popup) => {
+    const checkInterval = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(checkInterval);
+        setIsLoading(false);
+        window.location.reload();
+      }
+    }, 1000);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isLoggedIn) {
@@ -74,14 +86,16 @@ const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, curr
     if (orderType === 'buy' && totalAmount > availableCash) {
       const shortage = totalAmount - availableCash;
       openConfirm(`${shortage.toLocaleString()}원이 부족합니다. 충전하시겠습니까?`, async () => {
+        setIsLoading(true);
         try {
           const response = await chargeCash({ chargeAmount: shortage });
           if (response.success) {
             const popup = window.open(response.data.next_redirect_pc_url, 'kakaopay-popup', 'width=800,height=600');
             if (!popup) {
               openAlert('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.');
+              setIsLoading(false);
             } else {
-              openAlert('결제창이 열렸습니다. 결제 완료 후 다시 주문해주세요.');
+              handlePopupClose(popup);
             }
           } else {
             throw new Error(response.message || '결제 준비에 실패했습니다.');
@@ -89,6 +103,7 @@ const OrderPanel = ({ initialPrice, onSubmit, availableCash, ownedQuantity, curr
         } catch (error) {
           console.error('충전 준비 실패:', error);
           openAlert(error.message || '충전 중 오류가 발생했습니다.');
+          setIsLoading(false);
         }
       });
       return;

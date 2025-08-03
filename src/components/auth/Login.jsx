@@ -4,8 +4,8 @@ import { useAuth } from '@/hooks/useAuth';
 import useModal from '@/hooks/useModal';
 
 const Login = () => {
-  const [id, setId] = useState('sunjh96@naver.com');
-  const [password, setPassword] = useState('password123!');
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
 
   const { login } = useAuth();
   const { openAlert } = useModal();

@@ -1,13 +1,15 @@
 import classNames from 'classnames';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 
 import { chargeCash } from '@/api/user';
 import useModal from '@/hooks/useModal';
+import { loadingAtom } from '@/store/atoms';
 import { memberInfoAtom } from '@/store/user';
 
 const MyPageHeader = () => {
-  const [memberInfo, setMemberInfo] = useAtom(memberInfoAtom);
+  const [memberInfo] = useAtom(memberInfoAtom);
   const { openPrompt, openAlert } = useModal();
+  const setIsLoading = useSetAtom(loadingAtom);
 
   const nickname = memberInfo.nickname;
   const profileImage = memberInfo.profileImage;
@@ -16,6 +18,16 @@ const MyPageHeader = () => {
   const rank = memberInfo.ranking;
   const totalAssets = memberInfo.totalCashBalance || 0;
   const totalProfitRate = memberInfo.totalProfitRate;
+
+  const handlePopupClose = (popup) => {
+    const checkInterval = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(checkInterval);
+        setIsLoading(false);
+        window.location.reload();
+      }
+    }, 1000);
+  };
 
   const handleCharge = () => {
     openPrompt(
@@ -27,12 +39,16 @@ const MyPageHeader = () => {
           return;
         }
 
+        setIsLoading(true);
         try {
-          const response = await chargeCash({ chargeAmount: chargeAmount });
+          const response = await chargeCash({ chargeAmount });
           if (response.success) {
             const popup = window.open(response.data.next_redirect_pc_url, 'kakaopay-popup', 'width=800,height=600');
             if (!popup) {
               openAlert('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.');
+              setIsLoading(false);
+            } else {
+              handlePopupClose(popup);
             }
           } else {
             throw new Error(response.message || '결제 준비에 실패했습니다.');
@@ -40,6 +56,7 @@ const MyPageHeader = () => {
         } catch (error) {
           console.error('충전 준비 실패:', error);
           openAlert(error.message || '충전 중 오류가 발생했습니다.');
+          setIsLoading(false);
         }
       },
       () => {},

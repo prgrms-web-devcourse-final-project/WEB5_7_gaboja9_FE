@@ -7,7 +7,7 @@ import { MOCK_MAIL_DATA } from '@/constants/mockData';
 
 const Mailbox = () => {
   const [mails, setMails] = useState([]);
-  const [filter, setFilter] = useState('all'); // 'all', 'unread', 'read'
+  const [filter, setFilter] = useState('all');
   const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
@@ -48,7 +48,6 @@ const Mailbox = () => {
 
   const handleToggle = (id) => {
     setExpandedId((prevId) => (prevId === id ? null : id));
-    // 메일을 열면 '읽음' 상태로 변경
     setMails((prev) => prev.map((m) => (m.id === id ? { ...m, unread: false } : m)));
   };
 

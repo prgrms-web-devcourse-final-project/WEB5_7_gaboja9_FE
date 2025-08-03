@@ -35,12 +35,19 @@ export const applyForBankruptcy = async () => {
   return response.data;
 };
 
-export const fetchRanks = async (page = 0, size = 10) => {
-  const response = await axiosInstance.get('/ranks', { params: { page, size } });
+export const fetchRanks = async (ranksType, page = 0, size = 10) => {
+  const response = await axiosInstance.get('/ranks', {
+    params: { ranksType, page, size },
+  });
   return response.data;
 };
 
 export const updateUserInfo = async (params) => {
   const response = await axiosInstance.patch('/members/me/info', params);
+  return response.data;
+};
+
+export const chargeCash = async () => {
+  const response = await axiosInstance.post('/members/me/charge');
   return response.data;
 };

@@ -1,21 +1,38 @@
+import { useAtomValue } from 'jotai';
 import { useState, useMemo } from 'react';
 
 import Pagination from '@/components/common/Pagination';
 import StockTable from '@/components/StockTable';
-import { MOCK_ALL_STOCKS } from '@/constants/mockData';
+import { stocksAtom, stockPricesAtom } from '@/store/atoms';
 
 const ITEMS_PER_PAGE = 10;
 
 const StocksPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const allStocks = useAtomValue(stocksAtom);
+  const stockPrices = useAtomValue(stockPricesAtom);
+
+  const combinedStocks = useMemo(() => {
+    return allStocks.map((stock) => {
+      const priceInfo = stockPrices[stock.stockCode];
+      return {
+        id: stock.stockCode,
+        name: stock.stockName,
+        currentPrice: priceInfo?.currentPrice || 0,
+        changeRate: priceInfo?.dayOverDayPercent || 0,
+        volume: priceInfo?.cumulativeVolume || 0,
+        marketCap: 'N/A',
+      };
+    });
+  }, [allStocks, stockPrices]);
 
   const filteredStocks = useMemo(() => {
     if (!searchTerm) {
-      return MOCK_ALL_STOCKS;
+      return combinedStocks;
     }
-    return MOCK_ALL_STOCKS.filter((stock) => stock.name.toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [searchTerm]);
+    return combinedStocks.filter((stock) => stock.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  }, [searchTerm, combinedStocks]);
 
   const totalPages = Math.ceil(filteredStocks.length / ITEMS_PER_PAGE);
 

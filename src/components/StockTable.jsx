@@ -17,7 +17,6 @@ const StockTable = ({ stocks }) => {
             <th>현재가</th>
             <th>등락률</th>
             <th>거래량</th>
-            <th>시가총액</th>
           </tr>
         </thead>
         <tbody>
@@ -41,7 +40,6 @@ const StockTable = ({ stocks }) => {
                 {stock.changeRate.toFixed(2)}%
               </td>
               <td>{stock.volume.toLocaleString()}</td>
-              <td>{stock.marketCap}</td>
             </tr>
           ))}
         </tbody>

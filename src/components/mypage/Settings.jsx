@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { fetchNotificationSettings, updateNotificationSettings } from '@/api/notification';
 import useModal from '@/hooks/useModal';
 
 const Settings = () => {
@@ -12,6 +13,19 @@ const Settings = () => {
     market: true,
     time: true,
   });
+
+  useEffect(() => {
+    const fetchNotification = async () => {
+      const result = await fetchNotificationSettings();
+
+      setNotifications({
+        market: result.marketNotificationEnabled,
+        time: result.tradeNotificationEnabled,
+      });
+    };
+
+    fetchNotification();
+  }, []);
 
   const handleToggle = (key) => {
     setNotifications((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -37,7 +51,17 @@ const Settings = () => {
   };
 
   const handleSaveSettings = () => {
-    openAlert('알림 설정이 저장되었습니다.');
+    openAlert('알림 설정이 저장되었습니다.', async () => {
+      try {
+        await updateNotificationSettings({
+          marketNotificationEnabled: notifications.market,
+          tradeNotificationEnabled: notifications.time,
+        });
+      } catch (error) {
+        console.error('알림 설정 저장 실패:', error);
+        openAlert('알림 설정 저장에 실패했습니다. 다시 시도해주세요.');
+      }
+    });
   };
 
   const handleWithdrawal = () => {

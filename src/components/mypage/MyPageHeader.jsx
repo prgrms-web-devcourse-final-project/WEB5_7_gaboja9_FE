@@ -1,10 +1,13 @@
 import classNames from 'classnames';
 import { useAtom } from 'jotai';
 
+import { chargeCash, fetchUserInfo } from '@/api/user';
+import useModal from '@/hooks/useModal';
 import { memberInfoAtom } from '@/store/user';
 
 const MyPageHeader = () => {
-  const [memberInfo] = useAtom(memberInfoAtom);
+  const [memberInfo, setMemberInfo] = useAtom(memberInfoAtom);
+  const { openConfirm, openAlert } = useModal();
 
   const nickname = memberInfo.nickname;
   const profileImage = memberInfo.profileImage;
@@ -12,10 +15,21 @@ const MyPageHeader = () => {
   const daysActive = memberInfo.period;
   const rank = memberInfo.ranking;
   const totalAssets = memberInfo.totalCashBalance || 0;
-  const initialAsset = memberInfo.totalCashBalance - memberInfo.totalProfitRate;
+  const totalProfitRate = memberInfo.totalProfitRate;
 
-  // 총 수익률 계산
-  const returnRate = initialAsset > 0 ? ((totalAssets - initialAsset) / initialAsset) * 100 : 0;
+  const handleCharge = () => {
+    openConfirm('1,000,000원을 충전하시겠습니까?', async () => {
+      try {
+        await chargeCash();
+        const updatedUserInfo = await fetchUserInfo();
+        setMemberInfo(updatedUserInfo);
+        openAlert('충전이 완료되었습니다.');
+      } catch (error) {
+        console.error('충전 실패:', error);
+        openAlert('충전에 실패했습니다.');
+      }
+    });
+  };
 
   return (
     <div className="mypage-header">
@@ -27,18 +41,23 @@ const MyPageHeader = () => {
         <div className="stat-item">
           <span
             className={classNames('stat-value', {
-              positive: returnRate > 0,
-              negative: returnRate < 0,
+              positive: totalProfitRate > 0,
+              negative: totalProfitRate < 0,
             })}
           >
-            {returnRate >= 0 ? '+' : ''}
-            {returnRate.toFixed(2)}%
+            {totalProfitRate >= 0 ? '+' : ''}
+            {totalProfitRate.toFixed(2)}%
           </span>
           <span className="stat-label">수익률</span>
         </div>
         <div className="stat-divider"></div>
         <div className="stat-item">
-          <span className="stat-value">{totalAssets.toLocaleString()}원</span>
+          <div className="asset-display">
+            <span className="stat-value">{totalAssets.toLocaleString()}원</span>
+            <button className="charge-btn" onClick={handleCharge}>
+              충전
+            </button>
+          </div>
           <span className="stat-label">총 자산</span>
         </div>
         <div className="stat-divider"></div>

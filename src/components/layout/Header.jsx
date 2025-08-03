@@ -14,14 +14,10 @@ const Header = () => {
   const { logout } = useAuth();
 
   const handleClickLogout = () => {
-    openConfirm(
-      '정말 로그아웃 하시겠습니까?',
-      () => {
-        logout();
-        navigate('/');
-      },
-      () => console.log('Confirm Cancel'),
-    );
+    openConfirm('정말 로그아웃 하시겠습니까?', () => {
+      logout();
+      navigate('/');
+    });
   };
 
   const handleClickLogin = () => {

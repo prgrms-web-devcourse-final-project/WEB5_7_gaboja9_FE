@@ -3,49 +3,38 @@ import React from 'react';
 
 import RankingUserCell from './RankingUserCell';
 
-const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMore, hasMore }) => {
+const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMore, hasMore, isLoading }) => {
   const formatValue = (tabId, value) => {
     switch (tabId) {
       case 'returnRate':
-        // 수익률 랭킹: 위에는 수익률, 아래는 투자액
         return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
       case 'asset':
-        // 자산 랭킹: 위에는 현재 자산, 아래는 +자산
-        return `${value.toLocaleString()}원`;
       case 'volume':
-        // 거래량 랭킹: 위에는 거래량, 아래는 총 거래량 금액
         return `${value.toLocaleString()}원`;
       case 'bankruptcy':
-        // 파산 순위: 위에는 파산 횟수, 아래는 현재 자산
         return `${value}회`;
       default:
         return value;
     }
   };
-  // 거래량 -> 수익금 변경
 
   const getSecondaryValue = (tabId, user) => {
-    const profit = user.value - user.initialCapital;
-
     switch (tabId) {
       case 'returnRate':
-        // 수익률 랭킹의 오른쪽 보조값 (투자액)
-        return `투자액: ${user.initialCapital.toLocaleString()}원`;
-      case 'asset':
-        // 자산 랭킹의 오른쪽 보조값 (+자산)
+        return `투자액: ${user.totalInvestment.toLocaleString()}원`;
+      case 'asset': {
+        const profit = user.totalAsset - user.totalInvestment;
         return `${profit >= 0 ? '+' : ''}${profit.toLocaleString()}원`;
+      }
       case 'volume':
-        // 거래량 랭킹의 오른쪽 보조값 (총 거래량 금액)
-        return `총 거래량: ${user.totalTradeValue.toLocaleString()}원`;
+        return `수익률: ${user.returnRate.toFixed(2)}%`;
       case 'bankruptcy':
-        // 파산 순위의 오른쪽 보조값 (현재 자산)
-        return `현재 자산: ${user.currentAsset.toLocaleString()}원`;
+        return `현재 자산: ${user.totalAsset.toLocaleString()}원`;
       default:
         return '';
     }
   };
 
-  // 현재 보이는 랭킹 목록에 내 순위가 포함되어 있는지 확인
   const isMyRankDisplayed = displayedData.some((user) => user.id === myRankData?.id);
 
   return (
@@ -59,8 +48,8 @@ const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMor
               </td>
               <td
                 className={classNames('value-column', {
-                  positive: selectedRankingTab === 'returnRate' && user.value >= 0,
-                  negative: selectedRankingTab === 'returnRate' && user.value < 0,
+                  positive: (selectedRankingTab === 'returnRate' || selectedRankingTab === 'volume') && user.value > 0,
+                  negative: (selectedRankingTab === 'returnRate' || selectedRankingTab === 'volume') && user.value < 0,
                 })}
               >
                 <div>{formatValue(selectedRankingTab, user.value)}</div>
@@ -74,14 +63,13 @@ const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMor
           {hasMore && (
             <tr className="load-more-row">
               <td colSpan="2">
-                <button className="load-more-button" onClick={onLoadMore}>
-                  더 보기
+                <button className="load-more-button" onClick={onLoadMore} disabled={isLoading}>
+                  {isLoading ? '로딩 중...' : '더 보기'}
                 </button>
               </td>
             </tr>
           )}
 
-          {/* 내 순위가 있고, 현재 보이는 목록에 없을 때만 별도로 표시 */}
           {myRankData && !isMyRankDisplayed && (
             <tr className="my-rank-row">
               <td>
@@ -89,8 +77,10 @@ const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMor
               </td>
               <td
                 className={classNames('value-column', {
-                  positive: selectedRankingTab === 'returnRate' && myRankData.value >= 0,
-                  negative: selectedRankingTab === 'returnRate' && myRankData.value < 0,
+                  positive:
+                    (selectedRankingTab === 'returnRate' || selectedRankingTab === 'volume') && myRankData.value > 0,
+                  negative:
+                    (selectedRankingTab === 'returnRate' || selectedRankingTab === 'volume') && myRankData.value < 0,
                 })}
               >
                 <div>{formatValue(selectedRankingTab, myRankData.value)}</div>

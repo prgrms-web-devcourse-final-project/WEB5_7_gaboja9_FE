@@ -1,78 +1,84 @@
-import { Client } from '@stomp/stompjs';
 import { useState, useEffect, useRef } from 'react';
-import SockJS from 'sockjs-client';
 
-export const useStockSocket = (stockCode) => {
+export const useStockSocket = (stockCodes) => {
   const [stockData, setStockData] = useState(null);
   const [socketError, setSocketError] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  console.log('useStockSocket hook rendering...');
-
   const stompClient = useRef(null);
-  const subscription = useRef(null);
+  const subscriptions = useRef({});
 
   useEffect(() => {
-    if (!stockCode) {
+    if (typeof window.Stomp === 'undefined' || typeof window.SockJS === 'undefined') {
+      console.error('Stomp 또는 SockJS 라이브러리를 찾을 수 없습니다. index.html을 확인하세요.');
       return;
     }
-    const client = new Client({
-      webSocketFactory: () => new SockJS('https://mockstocks.duckdns.org/ws-stock'),
 
-      onWebSocketError: (error) => {
-        console.error('WebSocket Error', error);
-      },
-      onWebSocketClose: (event) => {
-        console.log('WebSocket Closed', event);
-      },
+    const codes = Array.isArray(stockCodes) ? stockCodes.filter(Boolean) : [stockCodes].filter(Boolean);
 
-      heartbeatIncoming: 0,
-      heartbeatOutgoing: 0,
+    if (codes.length === 0) {
+      if (stompClient.current && stompClient.current.connected) {
+        stompClient.current.disconnect(() => {
+          console.log('[STOMP] Disconnected');
+          setIsConnected(false);
+          stompClient.current = null;
+        });
+      }
+      return;
+    }
 
-      debug: (str) => {
-        console.log(new Date(), str);
-      },
-      onConnect: () => {
-        console.log(`[STOMP] ${stockCode}에 대한 구독을 시도합니다.`);
-        setIsConnected(true);
-        setSocketError(null);
+    if (!stompClient.current) {
+      const socket = new window.SockJS('https://mockstocks.duckdns.org/ws-stock');
 
-        client.subscribe('/user/queue/errors', (message) => {
-          const error = JSON.parse(message.body);
-          console.error('소켓 에러 수신:', error);
+      const client = window.Stomp.over(socket);
+
+      client.debug = null;
+
+      stompClient.current = client;
+
+      client.connect(
+        {},
+        (frame) => {
+          console.log('[STOMP] Connected: ' + frame);
+          setIsConnected(true);
+          setSocketError(null);
+
+          client.subscribe('/user/queue/errors', (message) => {
+            const error = JSON.parse(message.body);
+            console.error('소켓 에러 수신:', error);
+            setSocketError(error);
+          });
+
+          codes.forEach((stockCode) => {
+            if (!subscriptions.current[stockCode]) {
+              console.log(`구독 시도: /topic/stock/${stockCode}`);
+              subscriptions.current[stockCode] = client.subscribe(`/topic/stock/${stockCode}`, (message) => {
+                const data = JSON.parse(message.body);
+                console.log(`수신된 데이터: ${stockCode}`, data);
+                setStockData(data);
+              });
+            }
+          });
+        },
+        (error) => {
+          console.error('[STOMP] Connection error: ' + error);
+          setIsConnected(false);
           setSocketError(error);
-        });
-
-        if (subscription.current) {
-          subscription.current.unsubscribe();
-        }
-
-        subscription.current = client.subscribe(`/topic/stock/${stockCode}`, (message) => {
-          const data = JSON.parse(message.body);
-          setStockData(data);
-          console.log('주식 데이터 수신:', data);
-        });
-      },
-      onStompError: (frame) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        console.error('Additional details: ' + frame.body);
-        setSocketError({ code: 'STOMP_ERROR', message: frame.headers['message'] });
-        setIsConnected(false);
-      },
-      onDisconnect: () => {
-        setIsConnected(false);
-      },
-    });
-
-    client.activate();
-    stompClient.current = client;
+          stompClient.current = null;
+        },
+      );
+    }
 
     return () => {
-      if (client && client.active) {
-        client.deactivate();
+      if (stompClient.current && stompClient.current.connected) {
+        console.log('[STOMP] Disconnecting...');
+        stompClient.current.disconnect(() => {
+          console.log('[STOMP] Cleanly disconnected.');
+          setIsConnected(false);
+        });
       }
     };
-  }, [stockCode]);
+  }, [JSON.stringify(stockCodes)]);
 
   return { stockData, socketError, isConnected };
 };

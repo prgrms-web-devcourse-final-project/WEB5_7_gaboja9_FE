@@ -1,26 +1,63 @@
 import classNames from 'classnames';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import { MOCK_TRANSACTION_HISTORY } from '@/constants/mockData';
+import { fetchTradeHistory } from '@/api/user';
 
 const TransactionHistory = () => {
-  const [filter, setFilter] = useState('all'); // 'all', 'buy', 'sell'
+  const [transactions, setTransactions] = useState([]);
+  const [pagination, setPagination] = useState({
+    pageNumber: 0,
+    last: true,
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
+  const loadTransactions = useCallback(async (page, loadMore = false) => {
+    setIsLoading(true);
+    try {
+      const data = await fetchTradeHistory(page, 10);
+      const formattedData = data.content.map((tx) => ({
+        id: `${tx.tradeDateTime}-${tx.stockCode}-${tx.quantity}`,
+        type: tx.tradeType === 'BUY' ? '매수' : '매도',
+        name: tx.stockName,
+        stockId: tx.stockCode,
+        date: new Date(tx.tradeDateTime).toLocaleDateString('ko-KR'),
+        quantity: tx.quantity,
+        price: tx.price,
+        amount: tx.totalAmount,
+      }));
+      setTransactions((prev) => (loadMore ? [...prev, ...formattedData] : formattedData));
+      setPagination({
+        pageNumber: data.pageable.pageNumber,
+        last: data.last,
+      });
+    } catch (error) {
+      console.error('Failed to fetch transaction history:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadTransactions(0);
+  }, [loadTransactions]);
+
+  const handleLoadMore = () => {
+    if (!pagination.last && !isLoading) {
+      loadTransactions(pagination.pageNumber + 1, true);
+    }
+  };
+
   const filteredTransactions = useMemo(() => {
-    return MOCK_TRANSACTION_HISTORY.filter((tx) => {
-      // 1. 거래 유형 필터
+    return transactions.filter((tx) => {
       const typeMatch =
         filter === 'all' || (filter === 'buy' && tx.type === '매수') || (filter === 'sell' && tx.type === '매도');
-
-      // 2. 종목명 검색 필터
       const searchTermMatch = tx.name.toLowerCase().includes(searchTerm.toLowerCase());
-
-      // 3. 날짜 범위 필터
       const txDate = new Date(tx.date);
       let dateMatch = true;
       if (startDate && endDate) {
@@ -37,14 +74,7 @@ const TransactionHistory = () => {
 
       return typeMatch && searchTermMatch && dateMatch;
     });
-  }, [filter, searchTerm, startDate, endDate]);
-
-  const calculateRealizedPL = (tx) => {
-    if (tx.type !== '매도' || tx.purchasePrice == null) {
-      return null;
-    }
-    return (tx.price - tx.purchasePrice) * tx.quantity;
-  };
+  }, [transactions, filter, searchTerm, startDate, endDate]);
 
   return (
     <div className="transaction-history-section">
@@ -98,9 +128,12 @@ const TransactionHistory = () => {
       </div>
 
       <div className="transaction-list">
-        {filteredTransactions.map((tx) => {
-          const realizedPL = calculateRealizedPL(tx);
-          return (
+        {!isLoading && filteredTransactions.length === 0 ? (
+          <div className="no-data-message">
+            <p>거래 내역이 없습니다.</p>
+          </div>
+        ) : (
+          filteredTransactions.map((tx) => (
             <div key={tx.id} className="transaction-item">
               <div className="item-left">
                 <div className={classNames('type-icon', { buy: tx.type === '매수', sell: tx.type === '매도' })}>
@@ -119,17 +152,19 @@ const TransactionHistory = () => {
               </div>
               <div className="item-right">
                 <div className="tx-amount">{tx.amount.toLocaleString()}원</div>
-                {realizedPL != null && (
-                  <div className={classNames('tx-pl', { positive: realizedPL > 0, negative: realizedPL < 0 })}>
-                    {realizedPL >= 0 ? '+' : ''}
-                    {realizedPL.toLocaleString()}원
-                  </div>
-                )}
               </div>
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
+
+      {!pagination.last && (
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <button onClick={handleLoadMore} disabled={isLoading} className="load-more-button">
+            {isLoading ? '로딩 중...' : '더 보기'}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

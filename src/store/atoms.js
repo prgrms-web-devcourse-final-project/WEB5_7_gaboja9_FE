@@ -14,6 +14,8 @@ export const userAssetsAtom = atom(MOCK_USER_ASSETS);
 export const ownedStocksAtom = atom(MOCK_OWNED_STOCKS);
 export const watchListAtom = atom(MOCK_WATCHLIST);
 export const recentTransactionsAtom = atom(MOCK_RECENT_TRANSACTIONS);
+export const stocksAtom = atom([]);
+export const stockPricesAtom = atom({});
 
 export const totalStockValueAtom = atom((get) => {
   const stocks = get(ownedStocksAtom);

@@ -3,7 +3,7 @@ import { MOCK_STOCK_DETAIL } from '../constants/mockData';
 import axiosInstance from '@/api/instance';
 
 export const fetchStocks = async () => {
-  const response = await axiosInstance.get('/stocks');
+  const response = await axiosInstance.get('/api/stocks');
   return response.data;
 };
 

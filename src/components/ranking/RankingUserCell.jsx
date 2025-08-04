@@ -12,8 +12,6 @@ const RankingUserCell = ({ user, selectedRankingTab }) => {
       case 'asset':
       case 'volume':
         return `수익률: ${returnRate}`;
-      case 'bankruptcy':
-        return `현재 자산: ${user.totalAsset?.toLocaleString()}원`;
       default:
         return '';
     }

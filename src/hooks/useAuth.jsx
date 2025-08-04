@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import * as authApi from '@/api/auth';
 import useModal from '@/hooks/useModal';
@@ -13,11 +13,25 @@ export const useAuth = () => {
 
   const { openAlert } = useModal();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
+    const accessToken = searchParams.get('access');
+    const refreshToken = searchParams.get('refresh');
+
+    if (accessToken && refreshToken) {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
       setIsLoggedIn(true);
+
+      openAlert('로그인 되었습니다.', () => {
+        navigate('/', { replace: true });
+      });
+    } else {
+      const existingToken = localStorage.getItem('accessToken');
+      if (existingToken) {
+        setIsLoggedIn(true);
+      }
     }
   }, []);
 

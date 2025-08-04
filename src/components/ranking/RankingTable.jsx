@@ -21,7 +21,7 @@ const RankingTable = ({ displayedData, myRankData, selectedRankingTab, onLoadMor
   const getSecondaryValue = (tabId, user) => {
     switch (tabId) {
       case 'returnRate':
-        return `투자액: ${user.totalInvestment.toLocaleString()}원`;
+        return `현재 평가액: ${user.totalAsset.toLocaleString()}원`;
       case 'asset': {
         const profit = user.totalAsset - user.totalInvestment;
         return `${profit >= 0 ? '+' : ''}${profit.toLocaleString()}원`;

@@ -6,8 +6,8 @@ export const fetchStocks = async () => {
 };
 
 export const fetchChartData = async (stockCode, timeframe = 'daily', params = {}) => {
-  const type = timeframe === 'minute' ? 'daily' : timeframe;
-  const endpoint = `/stocks/chart/${type}/${stockCode}/initial`;
+  // ✅ [수정] 잘못된 타입 변경 로직을 제거합니다.
+  const endpoint = `/stocks/chart/${timeframe}/${stockCode}/initial`;
   const response = await axiosInstance.get(endpoint, { params });
   return response.data;
 };
@@ -20,8 +20,7 @@ export const fetchChartData = async (stockCode, timeframe = 'daily', params = {}
  * @param {number} limit - 조회할 데이터 개수
  */
 export const fetchPastChartData = async (stockCode, timeframe = 'daily', before, limit = 50) => {
-  const type = timeframe === 'minute' ? 'daily' : timeframe;
-  const endpoint = `/stocks/chart/${type}/${stockCode}/load-past`;
+  const endpoint = `/stocks/chart/${timeframe}/${stockCode}/load-past`;
   const response = await axiosInstance.get(endpoint, { params: { before, limit } });
   return response.data;
 };

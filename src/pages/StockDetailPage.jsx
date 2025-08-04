@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'; 
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -17,17 +17,18 @@ import OrderBook from '@/components/stockDetail/OrderBook';
 import OrderPanel from '@/components/stockDetail/OrderPanel';
 import StockChart from '@/components/stockDetail/StockChart';
 import useModal from '@/hooks/useModal';
-import { stocksAtom, stockPricesAtom, loadingAtom } from '@/store/atoms'; 
-import { memberInfoAtom } from '@/store/user';
+import { stocksAtom, stockPricesAtom, loadingAtom } from '@/store/atoms';
+import { isLoggedInAtom, memberInfoAtom } from '@/store/user';
 
 const StockDetailPage = () => {
   const { stockId } = useParams();
   const { openAlert, openConfirm } = useModal();
 
+  const isLoggedIn = useAtomValue(isLoggedInAtom);
   const allStocks = useAtomValue(stocksAtom);
   const realtimePrices = useAtomValue(stockPricesAtom);
   const [, setMemberInfo] = useAtom(memberInfoAtom);
-  const setIsLoading = useSetAtom(loadingAtom); 
+  const setIsLoading = useSetAtom(loadingAtom);
 
   const [stockInfo, setStockInfo] = useState({ name: '', previousClosePrice: 0 });
   const [chartData, setChartData] = useState([]);
@@ -40,8 +41,10 @@ const StockDetailPage = () => {
 
   const realtimeData = realtimePrices[stockId] || {};
   const currentPrice = realtimeData.currentPrice || stockInfo.previousClosePrice;
-  const changeRate = realtimeData.dayOverDayPercent || 0;
   const changeValue = currentPrice - stockInfo.previousClosePrice;
+
+  const calculatedChangeRate =
+    stockInfo.previousClosePrice > 0 ? (changeValue / stockInfo.previousClosePrice) * 100 : 0;
 
   const ownedStock = portfolio?.portfolios?.find((s) => s.stockCode === stockId);
 
@@ -78,7 +81,7 @@ const StockDetailPage = () => {
         setIsLoading(false);
       }
     },
-    [stockId, currentPrice, setIsLoading],
+    [stockId, setIsLoading],
   );
 
   useEffect(() => {
@@ -91,6 +94,10 @@ const StockDetailPage = () => {
       setPortfolio(portfolioData);
     };
     const checkFavorite = async () => {
+      if (!isLoggedIn) {
+        return;
+      }
+
       try {
         const favorites = await fetchFavoriteStocks();
         setIsFavorite(favorites.some((fav) => fav.stockCode === stockId));
@@ -101,7 +108,7 @@ const StockDetailPage = () => {
 
     getPortfolio();
     checkFavorite();
-  }, [stockId, allStocks]);
+  }, [stockId, allStocks, isLoggedIn]);
 
   useEffect(() => {
     loadChart(timeframe);
@@ -223,11 +230,11 @@ const StockDetailPage = () => {
             </button>
           </div>
           <div className="stock-header__price">
-            <span className={classNames('current-price', { positive: changeRate > 0, negative: changeRate < 0 })}>
+            <span className={classNames('current-price', { positive: changeValue > 0, negative: changeValue < 0 })}>
               {currentPrice.toLocaleString()}원
             </span>
-            <span className={classNames('change-info', { positive: changeRate > 0, negative: changeRate < 0 })}>
-              {changeRate >= 0 ? '▲' : '▼'} {changeValue.toLocaleString()} ({changeRate.toFixed(2)}%)
+            <span className={classNames('change-info', { positive: changeValue > 0, negative: changeValue < 0 })}>
+              {changeValue >= 0 ? '▲' : '▼'} {changeValue.toLocaleString()} ({calculatedChangeRate.toFixed(2)}%)
             </span>
           </div>
         </div>

@@ -6,7 +6,6 @@ export const fetchStocks = async () => {
 };
 
 export const fetchChartData = async (stockCode, timeframe = 'daily', params = {}) => {
-  // ✅ [수정] 잘못된 타입 변경 로직을 제거합니다.
   const endpoint = `/stocks/chart/${timeframe}/${stockCode}/initial`;
   const response = await axiosInstance.get(endpoint, { params });
   return response.data;

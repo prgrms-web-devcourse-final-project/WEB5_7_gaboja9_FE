@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { fetchPasswordReset } from '@/api/auth';
 import { fetchNotificationSettings, updateNotificationSettings } from '@/api/notification';
 import { applyForBankruptcy } from '@/api/user';
 import useModal from '@/hooks/useModal';
@@ -41,11 +42,22 @@ const Settings = () => {
     openConfirm(
       '비밀번호를 변경하시겠습니까?',
       () => {
-        openAlert('비밀번호가 변경되었습니다.', () => {
-          setCurrentPassword('');
-          setNewPassword('');
-          setConfirmPassword('');
-        });
+        fetchPasswordReset({
+          presentPassword: currentPassword,
+          newPassword,
+          passwordConfirm: confirmPassword,
+        })
+          .then(() => {
+            openAlert('비밀번호가 변경되었습니다.', () => {
+              setCurrentPassword('');
+              setNewPassword('');
+              setConfirmPassword('');
+            });
+          })
+          .catch((error) => {
+            console.error('비밀번호 변경 실패:', error);
+            openAlert('비밀번호 변경에 실패했습니다. 다시 시도해주세요.');
+          });
       },
       () => {},
     );
@@ -174,18 +186,6 @@ const Settings = () => {
         <div className="card-actions">
           <button className="submit-btn warning" onClick={handleBankruptcy}>
             파산 신청
-          </button>
-        </div>
-      </div>
-
-      <div className="setting-card withdrawal-card">
-        <h3 className="card-title">회원 탈퇴</h3>
-        <p className="withdrawal-description">
-          회원 탈퇴 시 모든 개인 정보와 투자 기록이 영구적으로 삭제되며, 복구할 수 없습니다.
-        </p>
-        <div className="card-actions">
-          <button className="submit-btn danger" onClick={handleWithdrawal}>
-            회원 탈퇴
           </button>
         </div>
       </div>

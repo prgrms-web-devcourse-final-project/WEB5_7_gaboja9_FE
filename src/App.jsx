@@ -5,6 +5,7 @@ import Modal from '@/components/common/Modal';
 import Layout from '@/components/layout/Layout';
 import AuthPage from '@/pages/AuthPage';
 import DashboardPage from '@/pages/DashboardPage';
+import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
 import MyPage from '@/pages/MyPage';
 import RankingPage from '@/pages/RankingPage';
 import StockDetailPage from '@/pages/StockDetailPage';
@@ -17,6 +18,7 @@ const App = () => {
       <Modal />
       <Routes>
         <Route path="/login" element={<AuthPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/" element={<StocksPage />} />

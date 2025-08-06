@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom'; // Link 임포트
 
 import { useAuth } from '@/hooks/useAuth';
 import useModal from '@/hooks/useModal';
@@ -29,6 +30,7 @@ const Login = () => {
 
   return (
     <form className="auth-form" onSubmit={handleLogin}>
+      {/* ... 기존 input-group ... */}
       <div className="input-group">
         <label htmlFor="login-id">아이디</label>
         <input
@@ -57,6 +59,7 @@ const Login = () => {
         로그인
       </button>
 
+      {/* ... 기존 social-login ... */}
       <div className="social-login">
         <div className="divider">
           <span>OR</span>
@@ -91,6 +94,9 @@ const Login = () => {
       </div>
 
       <div className="auth-footer">
+        <Link to="/forgot-password" className="link">
+          비밀번호 찾기
+        </Link>
         <p>
           <a href="/" className="link">
             비회원으로 이용하기

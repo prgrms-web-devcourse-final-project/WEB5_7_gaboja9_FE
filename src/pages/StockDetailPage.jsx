@@ -193,6 +193,7 @@ const StockDetailPage = () => {
 
   const timeOptions = [
     { value: 'minute', label: '분봉' },
+    { value: '5minute', label: '5분봉' },
     { value: 'daily', label: '일봉' },
     { value: 'weekly', label: '주봉' },
   ];

@@ -20,8 +20,8 @@ export const fetchMails = async () => {
   return response.data;
 };
 
-export const fetchUserMails = async () => {
-  const response = await axiosInstance.get('/members/me/mails');
+export const fetchMailReads = async (params) => {
+  const response = await axiosInstance.patch('/members/me/mails', { params });
   return response.data;
 };
 

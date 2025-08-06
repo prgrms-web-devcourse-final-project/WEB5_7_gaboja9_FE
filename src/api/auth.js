@@ -34,3 +34,13 @@ export const fetchEmail = async (params) => {
   const response = await axiosInstance.post('/auth/email', params);
   return response.data;
 };
+
+export const fetchEmailPasswordFind = async (params) => {
+  const response = await axiosInstance.post('/auth/email/passwordFind', params);
+  return response.data;
+};
+
+export const fetchPasswordFind = async (params) => {
+  const response = await axiosInstance.post('/auth/passwordFind', params);
+  return response.data;
+};

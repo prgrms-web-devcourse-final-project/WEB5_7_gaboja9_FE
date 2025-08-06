@@ -56,7 +56,6 @@
   }
 }
 
-// RankingTabs Styles
 .ranking-controls {
   display: flex;
   justify-content: center;
@@ -96,7 +95,6 @@
   }
 }
 
-// RankingTable Styles
 .ranking-table-container {
   @include card-style;
   overflow-x: auto;
@@ -169,7 +167,6 @@
   }
 }
 
-// RankingUserCell Styles
 .ranking-user-cell {
   display: flex;
   align-items: center;

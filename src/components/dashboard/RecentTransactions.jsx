@@ -9,7 +9,7 @@ const RecentTransactions = () => {
   useEffect(() => {
     const getTradeHistory = async () => {
       try {
-        const historyData = await fetchTradeHistory(0, 5); // 최근 5개 거래내역
+        const historyData = await fetchTradeHistory(0, 5);
         const formattedData = historyData.content.map((tx) => ({
           id: `${tx.tradeDateTime}-${tx.stockCode}-${tx.quantity}`,
           type: tx.tradeType === 'BUY' ? '매수' : '매도',
